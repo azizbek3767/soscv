@@ -1,0 +1,245 @@
+﻿<!-- Soskd.Admin/Views/MediaAboutUs/Details.cshtml -->
+@model Soskd.Admin.ViewModels.MediaAboutUsViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "Media Item Details";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-eye me-2 text-info"></i>Media Item Details
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="fas fa-edit me-2"></i>Edit
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Media Photo -->
+        @if (!string.IsNullOrEmpty(Model.PhotoUrl) && apiFileService != null)
+        {
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <img src="@apiFileService.GetApiFileUrl(@Model.PhotoUrl)" alt="Media Photo" class="img-fluid rounded shadow-sm" style="max-height: 400px;">
+                </div>
+            </div>
+        }
+
+        <!-- Content with Language Tabs -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">@Model.TitleEn</h5>
+                    @if (Model.Status == Soskd.Domain.Enums.MediaStatus.Published)
+                    {
+                        <span class="badge status-published">
+                            <i class="fas fa-check me-1"></i>Published
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge status-unpublished">
+                            <i class="fas fa-clock me-1"></i>Unpublished
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Content in Language Tabs -->
+                <ul class="nav nav-tabs" id="contentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="uzbek-tab" data-bs-toggle="tab" data-bs-target="#uzbek" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Uzbek
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="russian-tab" data-bs-toggle="tab" data-bs-target="#russian" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Russian
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="english-tab" data-bs-toggle="tab" data-bs-target="#english" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>English
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3" id="contentTabsContent">
+                    <!-- Uzbek Content -->
+                    <div class="tab-pane fade show active" id="uzbek" role="tabpanel">
+                        <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                        <p class="mb-3">@Model.TitleUz</p>
+
+                        <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                        <div class="mt-2 border rounded p-3 bg-light">
+                            @Html.Raw(Model.DescriptionUz)
+                        </div>
+                    </div>
+
+                    <!-- Russian Content -->
+                    <div class="tab-pane fade" id="russian" role="tabpanel">
+                        <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                        <p class="mb-3">@Model.TitleRu</p>
+
+                        <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                        <div class="mt-2 border rounded p-3 bg-light">
+                            @Html.Raw(Model.DescriptionRu)
+                        </div>
+                    </div>
+
+                    <!-- English Content -->
+                    <div class="tab-pane fade" id="english" role="tabpanel">
+                        <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                        <p class="mb-3">@Model.TitleEn</p>
+
+                        <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                        <div class="mt-2 border rounded p-3 bg-light">
+                            @Html.Raw(Model.DescriptionEn)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Source Link Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-external-link-alt me-2 text-primary"></i>Source Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-link me-2 text-muted"></i>
+                    <strong class="me-2">Source Link:</strong>
+                    <a href="@Model.SourceLink" target="_blank" class="text-decoration-none">
+                        @Model.SourceLink
+                        <i class="fas fa-external-link-alt ms-1 small"></i>
+                    </a>
+                </div>
+                <div class="mt-2">
+                    <a href="@Model.SourceLink" target="_blank" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-external-link-alt me-1"></i>Visit Source
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">ID:</dt>
+                    <dd class="col-sm-7">#@Model.Id</dd>
+
+                    <dt class="col-sm-5">Status:</dt>
+                    <dd class="col-sm-7">
+                        @if (Model.Status == Soskd.Domain.Enums.MediaStatus.Published)
+                        {
+                            <span class="badge status-published">
+                                <i class="fas fa-check me-1"></i>Published
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge status-unpublished">
+                                <i class="fas fa-clock me-1"></i>Unpublished
+                            </span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5">Published:</dt>
+                    <dd class="col-sm-7">
+                        <small>@Model.PublishDate.ToString("MMM dd, yyyy")<br>@Model.PublishDate.ToString("HH:mm")</small>
+                    </dd>
+
+                    @if (Model.CreatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.CreatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.CreatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+
+                    @if (Model.UpdatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Updated:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.UpdatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.UpdatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+
+        <!-- Photo Information -->
+        @if (!string.IsNullOrEmpty(Model.PhotoUrl) && apiFileService != null)
+        {
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-image me-2 text-primary"></i>Photo Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <img src="@apiFileService.GetApiFileUrl(@Model.PhotoUrl)" alt="Media Photo" class="img-thumbnail d-block mx-auto" style="max-width: 150px;">
+                        <div class="mt-2">
+                            <small class="text-muted">@Model.PhotoUrl</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Actions -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                        <i class="fas fa-edit me-2"></i>Edit Media Item
+                    </a>
+                    <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                        <i class="fas fa-trash me-2"></i>Delete Media Item
+                    </a>
+                    <a class="btn btn-outline-secondary" asp-action="Index">
+                        <i class="fas fa-list me-2"></i>All Media Items
+                    </a>
+                    <a href="@Model.SourceLink" target="_blank" class="btn btn-outline-primary">
+                        <i class="fas fa-external-link-alt me-2"></i>Visit Source
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .status-published {
+        background-color: #28a745 !important;
+        color: white;
+    }
+
+    .status-unpublished {
+        background-color: #6c757d !important;
+        color: white;
+    }
+</style>

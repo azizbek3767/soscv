@@ -1,0 +1,205 @@
+﻿<!-- Soskd.Admin/Views/MediaAboutUs/Delete.cshtml -->
+@model Soskd.Admin.ViewModels.MediaAboutUsViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "Delete Media Item";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-trash me-2 text-danger"></i>Delete Media Item
+            </h1>
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-warning me-2"></i>
+                    <strong>Warning!</strong> This action cannot be undone. The media item and its associated photo will be permanently deleted.
+                </div>
+
+                <h6 class="mb-3">Are you sure you want to delete this media item?</h6>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        @if (!string.IsNullOrEmpty(Model.PhotoUrl) && apiFileService != null)
+                        {
+                            <img src="@apiFileService.GetApiFileUrl(@Model.PhotoUrl)" alt="Media Photo" class="img-thumbnail mb-3" style="width: 100%; max-width: 200px;">
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center mb-3" style="width: 100%; height: 150px; max-width: 200px;">
+                                <i class="fas fa-image fa-2x text-muted"></i>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-9">
+                        <dl class="row">
+                            <dt class="col-sm-3">ID:</dt>
+                            <dd class="col-sm-9">#@Model.Id</dd>
+
+                            <dt class="col-sm-3">Status:</dt>
+                            <dd class="col-sm-9">
+                                @if (Model.Status == Soskd.Domain.Enums.MediaStatus.Published)
+                                {
+                                    <span class="badge status-published">
+                                        <i class="fas fa-check me-1"></i>Published
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge status-unpublished">
+                                        <i class="fas fa-clock me-1"></i>Unpublished
+                                    </span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-3">Publish Date:</dt>
+                            <dd class="col-sm-9">@Model.PublishDate.ToString("MMMM dd, yyyy HH:mm")</dd>
+
+                            <dt class="col-sm-3">Source Link:</dt>
+                            <dd class="col-sm-9">
+                                <a href="@Model.SourceLink" target="_blank" class="text-decoration-none">
+                                    @(Model.SourceLink.Length > 50 ? Model.SourceLink.Substring(0, 50) + "..." : Model.SourceLink)
+                                    <i class="fas fa-external-link-alt ms-1 small"></i>
+                                </a>
+                            </dd>
+
+                            @if (Model.CreatedAt.HasValue)
+                            {
+                                <dt class="col-sm-3">Created:</dt>
+                                <dd class="col-sm-9">@Model.CreatedAt.Value.ToString("MMMM dd, yyyy HH:mm")</dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- Content Summary by Language -->
+                <div class="mt-4">
+                    <h6>Content Summary:</h6>
+
+                    <!-- Language Tabs -->
+                    <ul class="nav nav-tabs" id="deleteTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="delete-uzbek-tab" data-bs-toggle="tab" data-bs-target="#delete-uzbek" type="button" role="tab">
+                                <i class="fas fa-flag me-1"></i>Uzbek
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="delete-russian-tab" data-bs-toggle="tab" data-bs-target="#delete-russian" type="button" role="tab">
+                                <i class="fas fa-flag me-1"></i>Russian
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="delete-english-tab" data-bs-toggle="tab" data-bs-target="#delete-english" type="button" role="tab">
+                                <i class="fas fa-flag me-1"></i>English
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-3" id="deleteTabsContent">
+                        <!-- Uzbek Content -->
+                        <div class="tab-pane fade show active" id="delete-uzbek" role="tabpanel">
+                            <div class="border rounded p-3 bg-light">
+                                <div class="mb-2">
+                                    <strong>Title:</strong> @Model.TitleUz
+                                </div>
+                                <div class="mt-2">
+                                    <strong>Description Preview:</strong>
+                                    <div class="small text-muted">
+                                        @Html.Raw(Model.DescriptionUz.Length > 200 ? Model.DescriptionUz.Substring(0, 200) + "..." : Model.DescriptionUz)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Russian Content -->
+                        <div class="tab-pane fade" id="delete-russian" role="tabpanel">
+                            <div class="border rounded p-3 bg-light">
+                                <div class="mb-2">
+                                    <strong>Title:</strong> @Model.TitleRu
+                                </div>
+                                <div class="mt-2">
+                                    <strong>Description Preview:</strong>
+                                    <div class="small text-muted">
+                                        @Html.Raw(Model.DescriptionRu.Length > 200 ? Model.DescriptionRu.Substring(0, 200) + "..." : Model.DescriptionRu)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- English Content -->
+                        <div class="tab-pane fade" id="delete-english" role="tabpanel">
+                            <div class="border rounded p-3 bg-light">
+                                <div class="mb-2">
+                                    <strong>Title:</strong> @Model.TitleEn
+                                </div>
+                                <div class="mt-2">
+                                    <strong>Description Preview:</strong>
+                                    <div class="small text-muted">
+                                        @Html.Raw(Model.DescriptionEn.Length > 200 ? Model.DescriptionEn.Substring(0, 200) + "..." : Model.DescriptionEn)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Files to be deleted -->
+                @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+                {
+                    <div class="mt-4">
+                        <h6 class="text-warning">
+                            <i class="fas fa-files me-1"></i>Files to be deleted:
+                        </h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-image me-1 text-muted"></i>Photo: <code>@Model.PhotoUrl</code></li>
+                        </ul>
+                    </div>
+                }
+            </div>
+            <div class="card-footer bg-white border-top">
+                <form asp-action="Delete" method="post" class="d-inline">
+                    <input asp-for="Id" type="hidden" />
+                    <div class="d-flex justify-content-end gap-2">
+                        <a class="btn btn-secondary" asp-action="Index">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">
+                            <i class="fas fa-edit me-2"></i>Edit Instead
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Yes, Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .status-published {
+        background-color: #28a745 !important;
+        color: white;
+    }
+
+    .status-unpublished {
+        background-color: #6c757d !important;
+        color: white;
+    }
+</style>

@@ -1,0 +1,292 @@
+﻿<!-- Soskd.Admin/Views/ContactApplications/Details.cshtml -->
+@model Soskd.Admin.ViewModels.ContactApplicationViewModel
+@{
+    ViewData["Title"] = "Contact Application Details";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-eye me-2 text-info"></i>Contact Application Details
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">
+                    <i class="fas fa-trash me-2"></i>Delete
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Main Content Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user me-2 text-primary"></i>@Model.FullName
+                    </h5>
+                    <span class="badge bg-info">ID: #@Model.Id</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Contact Information -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-address-book me-2"></i>Contact Information
+                        </h6>
+                        <dl class="row">
+                            <dt class="col-sm-4">Full Name:</dt>
+                            <dd class="col-sm-8">@Model.FullName</dd>
+
+                            <dt class="col-sm-4">Email:</dt>
+                            <dd class="col-sm-8">
+                                <a href="mailto:@Model.Email" class="text-decoration-none">
+                                    <i class="fas fa-envelope me-1"></i>@Model.Email
+                                </a>
+                            </dd>
+
+                            <dt class="col-sm-4">Phone:</dt>
+                            <dd class="col-sm-8">
+                                @if (Model.HasPhone)
+                                {
+                                    <a href="tel:@Model.Phone" class="text-decoration-none">
+                                        <i class="fas fa-phone me-1"></i>@Model.Phone
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not provided</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-4">City:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge bg-light text-dark">
+                                    <i class="fas fa-map-marker-alt me-1"></i>@Model.City
+                                </span>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-clock me-2"></i>Submission Details
+                        </h6>
+                        <dl class="row">
+                            <dt class="col-sm-4">Submitted:</dt>
+                            <dd class="col-sm-8">
+                                <div>@Model.CreatedAt.ToString("MMMM dd, yyyy")</div>
+                                <small class="text-muted">@Model.CreatedAt.ToString("HH:mm:ss") UTC</small>
+                            </dd>
+
+                            <dt class="col-sm-4">Time Ago:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge bg-success">
+                                    @{
+                                        var timeSpan = DateTime.UtcNow - Model.CreatedAt;
+                                        string timeAgo = "";
+                                        if (timeSpan.TotalDays > 30)
+                                            timeAgo = $"{(int)(timeSpan.TotalDays / 30)} month(s) ago";
+                                        else if (timeSpan.TotalDays > 1)
+                                            timeAgo = $"{(int)timeSpan.TotalDays} day(s) ago";
+                                        else if (timeSpan.TotalHours > 1)
+                                            timeAgo = $"{(int)timeSpan.TotalHours} hour(s) ago";
+                                        else if (timeSpan.TotalMinutes > 1)
+                                            timeAgo = $"{(int)timeSpan.TotalMinutes} minute(s) ago";
+                                        else
+                                            timeAgo = "Just now";
+                                    }
+                                    @timeAgo
+                                </span>
+                            </dd>
+
+                            @if (!string.IsNullOrEmpty(Model.IpAddress))
+                            {
+                                <dt class="col-sm-4">IP Address:</dt>
+                                <dd class="col-sm-8">
+                                    <code class="text-muted">@Model.IpAddress</code>
+                                </dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- Message Content -->
+                <div class="mb-4">
+                    <h6 class="text-muted mb-3">
+                        <i class="fas fa-comment-alt me-2"></i>Message Content
+                    </h6>
+                    <div class="border rounded p-3 bg-light">
+                        <div class="message-content" style="white-space: pre-wrap; line-height: 1.6;">@Model.Message</div>
+                    </div>
+                    <small class="text-muted">
+                        Message length: @Model.Message.Length characters
+                    </small>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="mailto:@Model.Email?subject=Re: Your Contact Form Submission&body=Hello @Model.FullName,%0D%0A%0D%0AThank you for contacting SOS Children's Village. "
+                       class="btn btn-primary btn-sm">
+                        <i class="fas fa-reply me-1"></i>Reply via Email
+                    </a>
+
+                    @if (Model.HasPhone)
+                    {
+                        <a href="tel:@Model.Phone" class="btn btn-success btn-sm">
+                            <i class="fas fa-phone me-1"></i>Call
+                        </a>
+                    }
+
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyToClipboard('@Model.Email')">
+                        <i class="fas fa-copy me-1"></i>Copy Email
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Summary Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2 text-info"></i>Summary
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <div class="bg-primary bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center"
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-user fa-2x text-white"></i>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <h6 class="mb-2">@Model.FullName</h6>
+                    <p class="text-muted mb-3">from @Model.City</p>
+                    <div class="small">
+                        <div class="mb-1">
+                            <strong>Submitted:</strong> @Model.CreatedAtFormatted
+                        </div>
+                        <div class="mb-1">
+                            <strong>Contact:</strong> @Model.Email
+                        </div>
+                        @if (Model.HasPhone)
+                        {
+                            <div class="mb-1">
+                                <strong>Phone:</strong> @Model.Phone
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Details -->
+        @if (!string.IsNullOrEmpty(Model.IpAddress) || !string.IsNullOrEmpty(Model.UserAgent))
+        {
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cog me-2 text-muted"></i>Technical Details
+                    </h6>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.IpAddress))
+                    {
+                        <div class="mb-3">
+                            <strong>IP Address:</strong>
+                            <br>
+                            <code class="small">@Model.IpAddress</code>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.UserAgent))
+                    {
+                        <div class="mb-3">
+                            <strong>User Agent:</strong>
+                            <br>
+                            <small class="text-muted" style="word-break: break-all;">@Model.UserAgent</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Actions Card -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-primary"
+                       href="mailto:@Model.Email?subject=Re: Your Contact Form Submission&body=Hello @Model.FullName,%0D%0A%0D%0AThank you for contacting SOS Children's Village.%0D%0A%0D%0A">
+                        <i class="fas fa-reply me-2"></i>Reply via Email
+                    </a>
+
+                    <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                        <i class="fas fa-trash me-2"></i>Delete Application
+                    </a>
+
+                    <a class="btn btn-outline-secondary" asp-action="Index">
+                        <i class="fas fa-list me-2"></i>All Applications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            // Show success message
+            const toast = document.createElement('div');
+            toast.className = 'toast position-fixed top-0 end-0 m-3';
+            toast.innerHTML = `
+                <div class="toast-header">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    <strong class="me-auto">Copied!</strong>
+                </div>
+                <div class="toast-body">
+                    Email address copied to clipboard
+                </div>
+            `;
+            document.body.appendChild(toast);
+
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 3000);
+        }).catch(function(err) {
+            console.error('Could not copy text: ', err);
+            alert('Could not copy email address');
+        });
+    }
+</script>
+
+<style>
+    .message-content {
+        font-size: 0.95rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .card-header {
+        background-color: #f8f9fc !important;
+    }
+
+    code {
+        font-size: 0.85em;
+        padding: 0.2em 0.4em;
+        background-color: #e9ecef;
+        border-radius: 0.25rem;
+    }
+</style>

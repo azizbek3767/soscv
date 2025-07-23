@@ -1,0 +1,6 @@
+@Soskd.Api_HostAddress = http://localhost:5062
+
+GET {{Soskd.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

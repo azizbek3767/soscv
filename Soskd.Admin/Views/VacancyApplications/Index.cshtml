@@ -1,0 +1,265 @@
+﻿<!-- Soskd.Admin/Views/VacancyApplications/Index.cshtml -->
+@model Soskd.Admin.ViewModels.VacancyApplicationListViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "Vacancy Applications";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-users me-2 text-primary"></i>Vacancy Applications
+                @if (Model.SelectedVacancyId.HasValue)
+                {
+                    <small class="text-muted">for "@Model.SelectedVacancyTitle"</small>
+                }
+            </h1>
+            <div class="btn-group">
+                @if (Model.SelectedVacancyId.HasValue)
+                {
+                    <a class="btn btn-outline-secondary" asp-action="Index">
+                        <i class="fas fa-list me-2"></i>All Applications
+                    </a>
+                }
+                <a class="btn btn-outline-secondary" asp-controller="Vacancies" asp-action="Index">
+                    <i class="fas fa-briefcase me-2"></i>Manage Vacancies
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Filters Card -->
+@if (Model.VacancyFilters.Any())
+{
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom-0 py-3">
+            <h6 class="card-title mb-0 text-muted">
+                <i class="fas fa-filter me-2"></i>Filter by Vacancy
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-2">
+                <div class="col-auto">
+                    <a class="btn @(Model.SelectedVacancyId.HasValue ? "btn-outline-primary" : "btn-primary") btn-sm"
+                       asp-action="Index">
+                        All (@Model.TotalCount)
+                    </a>
+                </div>
+                @foreach (var filter in Model.VacancyFilters)
+                {
+                    <div class="col-auto">
+                        <a class="btn @(Model.SelectedVacancyId == filter.Id ? "btn-primary" : "btn-outline-primary") btn-sm"
+                           asp-action="Index" asp-route-vacancyId="@filter.Id"
+                           title="@filter.Title">
+                            @(filter.Title.Length > 30 ? filter.Title.Substring(0, 30) + "..." : filter.Title)
+                            <span class="badge bg-light text-dark ms-1">@filter.ApplicationCount</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Applications List -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom-0 py-3">
+        <div class="row align-items-center">
+            <div class="col">
+                <h6 class="card-title mb-0 text-muted">
+                    <i class="fas fa-list me-2"></i>Applications (@Model.TotalCount)
+                </h6>
+            </div>
+            <div class="col-auto">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.Applications.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 200px;">Applicant</th>
+                            <th style="width: 200px;">Contact</th>
+                            <th>Vacancy</th>
+                            <th style="width: 300px;">Cover Letter Preview</th>
+                            <th style="width: 120px;">Resume</th>
+                            <th style="width: 120px;">Applied Date</th>
+                            <th style="width: 120px;" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Applications)
+                        {
+                            <tr>
+                                <td>
+                                    <div>
+                                        <h6 class="mb-1">@item.FullName</h6>
+                                        <small class="text-muted">#@item.Id</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="small">
+                                            <i class="fas fa-envelope me-1"></i>
+                                            <a href="mailto:@item.Email">@item.Email</a>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(item.Phone))
+                                        {
+                                            <div class="small text-muted">
+                                                <i class="fas fa-phone me-1"></i>@item.Phone
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <h6 class="mb-1">@item.VacancyTitle</h6>
+                                        <small class="text-muted">ID: @item.VacancyId</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="small text-muted">
+                                        @item.ShortCoverLetter
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ResumeUrl))
+                                    {
+                                        <a class="btn btn-outline-info btn-sm"
+                                           asp-action="DownloadResume" asp-route-id="@item.Id"
+                                           title="Download @item.ResumeFileName">
+                                            <i class="fas fa-download me-1"></i>Resume
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">No file</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="text-muted small">
+                                        @item.CreatedAt.ToString("MMM dd, yyyy")
+                                        <br>
+                                        @item.CreatedAt.ToString("HH:mm")
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-outline-primary btn-sm"
+                                           asp-action="Details" asp-route-id="@item.Id"
+                                           title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm btn-delete"
+                                           asp-action="Delete" asp-route-id="@item.Id"
+                                           title="Delete Application">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <div class="card-footer bg-white border-top-0">
+                    <nav aria-label="Applications pagination">
+                        <ul class="pagination pagination-sm justify-content-center mb-0">
+                            @if (Model.PageNumber > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-page="@(Model.PageNumber - 1)"
+                                       asp-route-vacancyId="@Model.SelectedVacancyId">
+                                        Previous
+                                    </a>
+                                </li>
+                            }
+
+                            @for (int i = Math.Max(1, Model.PageNumber - 2); i <= Math.Min(Model.TotalPages, Model.PageNumber + 2); i++)
+                            {
+                                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-page="@i"
+                                       asp-route-vacancyId="@Model.SelectedVacancyId">
+                                        @i
+                                    </a>
+                                </li>
+                            }
+
+                            @if (Model.PageNumber < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-page="@(Model.PageNumber + 1)"
+                                       asp-route-vacancyId="@Model.SelectedVacancyId">
+                                        Next
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                    <div class="text-center text-muted small mt-2">
+                        Showing @((Model.PageNumber - 1) * Model.PageSize + 1) to @(Math.Min(Model.PageNumber * Model.PageSize, Model.TotalCount)) of @Model.TotalCount entries
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-users fa-3x text-muted"></i>
+                </div>
+                <h5 class="text-muted mb-3">No Applications Found</h5>
+                @if (Model.SelectedVacancyId.HasValue)
+                {
+                    <p class="text-muted mb-4">No applications have been submitted for this vacancy yet.</p>
+                    <a class="btn btn-secondary" asp-action="Index">
+                        <i class="fas fa-list me-2"></i>View All Applications
+                    </a>
+                }
+                else
+                {
+                    <p class="text-muted mb-4">No job applications have been submitted yet.</p>
+                    <a class="btn btn-primary" asp-controller="Vacancies" asp-action="Index">
+                        <i class="fas fa-briefcase me-2"></i>Manage Vacancies
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>

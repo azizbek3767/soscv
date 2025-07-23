@@ -1,0 +1,173 @@
+﻿<!-- Soskd.Admin/Views/ContactApplications/Delete.cshtml -->
+@model Soskd.Admin.ViewModels.ContactApplicationViewModel
+@{
+    ViewData["Title"] = "Delete Contact Application";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-trash me-2 text-danger"></i>Delete Contact Application
+            </h1>
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-warning me-2"></i>
+                    <strong>Warning!</strong> This action cannot be undone. The contact application and all associated data will be permanently deleted.
+                </div>
+
+                <h6 class="mb-3">Are you sure you want to delete this contact application?</h6>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Contact Information Summary -->
+                        <div class="border rounded p-3 bg-light mb-3">
+                            <h6 class="text-muted mb-3">
+                                <i class="fas fa-user me-2"></i>Contact Information
+                            </h6>
+                            <dl class="row mb-0">
+                                <dt class="col-sm-4">ID:</dt>
+                                <dd class="col-sm-8">#@Model.Id</dd>
+
+                                <dt class="col-sm-4">Name:</dt>
+                                <dd class="col-sm-8">@Model.FullName</dd>
+
+                                <dt class="col-sm-4">Email:</dt>
+                                <dd class="col-sm-8">@Model.Email</dd>
+
+                                <dt class="col-sm-4">Phone:</dt>
+                                <dd class="col-sm-8">
+                                    @if (Model.HasPhone)
+                                    {
+                                        @Model.Phone
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Not provided</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-4">City:</dt>
+                                <dd class="col-sm-8">@Model.City</dd>
+
+                                <dt class="col-sm-4">Submitted:</dt>
+                                <dd class="col-sm-8">@Model.CreatedAt.ToString("MMMM dd, yyyy HH:mm")</dd>
+
+                                @if (!string.IsNullOrEmpty(Model.IpAddress))
+                                {
+                                    <dt class="col-sm-4">IP Address:</dt>
+                                    <dd class="col-sm-8"><code>@Model.IpAddress</code></dd>
+                                }
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Message Preview -->
+                        <div class="border rounded p-3 bg-light mb-3">
+                            <h6 class="text-muted mb-3">
+                                <i class="fas fa-comment-alt me-2"></i>Message Content
+                            </h6>
+                            <div class="message-preview" style="max-height: 200px; overflow-y: auto;">
+                                <div style="white-space: pre-wrap; font-size: 0.9rem; line-height: 1.5;">@Model.Message</div>
+                            </div>
+                            <small class="text-muted mt-2 d-block">
+                                Length: @Model.Message.Length characters
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What will be deleted -->
+                <div class="mt-4">
+                    <h6 class="text-warning">
+                        <i class="fas fa-exclamation-circle me-1"></i>What will be deleted:
+                    </h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-user me-1 text-muted"></i>Contact information (name, email, phone, city)</li>
+                        <li><i class="fas fa-comment me-1 text-muted"></i>Message content</li>
+                        <li><i class="fas fa-clock me-1 text-muted"></i>Submission timestamp</li>
+                        <li><i class="fas fa-server me-1 text-muted"></i>Technical details (IP address, user agent)</li>
+                    </ul>
+                </div>
+
+                <!-- Recommendation -->
+                <div class="mt-4">
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        <strong>Recommendation:</strong> Consider replying to this person before deleting their application,
+                        as they took the time to contact your organization.
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top">
+                <form asp-action="Delete" method="post" class="d-inline">
+                    <input asp-for="Id" type="hidden" />
+                    <div class="d-flex justify-content-end gap-2">
+                        <a class="btn btn-secondary" asp-action="Index">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@Model.Id">
+                            <i class="fas fa-eye me-2"></i>View Details
+                        </a>
+                        <a class="btn btn-success"
+                           href="mailto:@Model.Email?subject=Re: Your Contact Form Submission&body=Hello @Model.FullName,%0D%0A%0D%0AThank you for contacting SOS Children's Village.%0D%0A%0D%0A">
+                            <i class="fas fa-reply me-2"></i>Reply First
+                        </a>
+                        <button type="submit" class="btn btn-danger" onclick="return confirmDelete()">
+                            <i class="fas fa-trash me-2"></i>Yes, Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm('Are you absolutely sure you want to delete this contact application? This action cannot be undone.');
+    }
+</script>
+
+<style>
+    .message-preview {
+        background-color: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        padding: 0.75rem;
+    }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        color: #0c5460;
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffecb5;
+        color: #664d03;
+    }
+
+    code {
+        font-size: 0.85em;
+        padding: 0.2em 0.4em;
+        background-color: #e9ecef;
+        border-radius: 0.25rem;
+    }
+</style>

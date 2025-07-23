@@ -1,0 +1,194 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle me-1"></i>
+                @User.Identity.Name!
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                        <i class="fas fa-user me-2"></i>Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-cog me-2"></i>Settings
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <!-- Changed to button that triggers modal instead of form -->
+                    <button type="button" class="btn btn-link dropdown-item text-start p-2" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </button>
+                </li>
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+</ul>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title" id="logoutConfirmModalLabel">
+                    <i class="fas fa-sign-out-alt me-2 text-warning"></i>
+                    Confirm Logout
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-question-circle fa-3x text-warning mb-3"></i>
+                </div>
+                <h6 class="mb-3">Are you sure you want to log out?</h6>
+                <p class="text-muted small mb-0">You will need to log in again to access the admin panel.</p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <!-- Hidden form for actual logout -->
+                <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i>Yes, Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom styling for the logout modal */
+    #logoutConfirmModal .modal-content {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    #logoutConfirmModal .modal-header {
+        background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+        border-radius: 15px 15px 0 0;
+    }
+
+    #logoutConfirmModal .modal-footer {
+        background: #f8f9fa;
+        border-radius: 0 0 15px 15px;
+    }
+
+    #logoutConfirmModal .btn {
+        border-radius: 25px;
+        padding: 8px 20px;
+        font-weight: 500;
+    }
+
+    #logoutConfirmModal .btn-danger {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        border: none;
+        box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+    }
+
+        #logoutConfirmModal .btn-danger:hover {
+            background: linear-gradient(45deg, #c82333, #bd2130);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+    #logoutConfirmModal .btn-secondary {
+        background: #6c757d;
+        border: none;
+    }
+
+        #logoutConfirmModal .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+
+    /* Animation for the question mark icon */
+    #logoutConfirmModal .fa-question-circle {
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%
+
+    {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+    }
+</style>
+
+<script>
+    // Additional JavaScript for enhanced logout experience
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoutModal = document.getElementById('logoutConfirmModal');
+        const logoutForm = document.getElementById('logoutForm');
+
+        if (logoutModal && logoutForm) {
+            // Add smooth animation when modal opens
+            logoutModal.addEventListener('show.bs.modal', function () {
+                // Focus on the cancel button by default (safer UX)
+                setTimeout(() => {
+                    const cancelBtn = this.querySelector('.btn-secondary');
+                    if (cancelBtn) cancelBtn.focus();
+                }, 100);
+            });
+
+            // Add keyboard shortcuts
+            logoutModal.addEventListener('keydown', function(e) {
+                // Enter key = logout
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    logoutForm.submit();
+                }
+                // Escape key = cancel (already handled by Bootstrap)
+            });
+
+            // Add loading state to logout button
+            logoutForm.addEventListener('submit', function() {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Logging out...';
+                    submitBtn.disabled = true;
+                }
+            });
+        }
+
+        // Also add logout confirmation to any other logout links on the page
+        document.querySelectorAll('a[href*="Logout"], button[data-logout]').forEach(function(element) {
+            if (!element.hasAttribute('data-bs-toggle')) { // Skip if already has modal trigger
+                element.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const modal = new bootstrap.Modal(logoutModal);
+                    modal.show();
+                });
+            }
+        });
+    });
+</script>

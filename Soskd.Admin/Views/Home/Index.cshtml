@@ -1,0 +1,817 @@
+﻿<!-- Updated Soskd.Admin/Views/Home/Index.cshtml - with Sponsors -->
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-tachometer-alt me-2 text-primary"></i>Dashboard
+            </h1>
+            <div class="text-muted">
+                <i class="fas fa-calendar-alt me-1"></i>
+                @DateTime.Now.ToString("MMMM dd, yyyy")
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage as string))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row g-4">
+    <!-- Welcome Card -->
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-heart fa-4x text-primary"></i>
+                </div>
+                <h2 class="card-title text-primary mb-3">Welcome to SOS Admin Panel</h2>
+                <p class="card-text text-muted mb-4">
+                    Manage your SOS Children's Villages website content with ease.
+                    Use the navigation menu on the left to access different sections.
+                </p>
+                <div class="row g-3 justify-content-center">
+                    <div class="col-md-2">
+                        <a class="btn btn-primary btn-lg w-100" asp-controller="News" asp-action="Index">
+                            <i class="fas fa-newspaper me-2"></i>News
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-success btn-lg w-100" asp-controller="Vacancies" asp-action="Index">
+                            <i class="fas fa-briefcase me-2"></i>Vacancies
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-danger btn-lg w-100" asp-controller="Documents" asp-action="Index">
+                            <i class="fas fa-file-pdf me-2"></i>Documents
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-info btn-lg w-100" asp-controller="MediaAboutUs" asp-action="Index">
+                            <i class="fas fa-newspaper me-2"></i>Media
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-warning btn-lg w-100" asp-controller="Sponsors" asp-action="Index">
+                            <i class="fas fa-handshake me-2"></i>Sponsors
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-secondary btn-lg w-100" asp-controller="VacancyApplications" asp-action="Index">
+                            <i class="fas fa-users me-2"></i>Applications
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- News Statistics Section -->
+    <div class="col-12">
+        <h4 class="mb-3">
+            <i class="fas fa-newspaper me-2 text-primary"></i>News Statistics
+        </h4>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-primary bg-gradient rounded-circle p-3">
+                            <i class="fas fa-newspaper text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Total News</div>
+                        <div class="h4 mb-0">@ViewBag.TotalNews</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-gradient rounded-circle p-3">
+                            <i class="fas fa-check-circle text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Published News</div>
+                        <div class="h4 mb-0">@ViewBag.PublishedNews</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-warning bg-gradient rounded-circle p-3">
+                            <i class="fas fa-clock text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Unpublished News</div>
+                        <div class="h4 mb-0">@ViewBag.UnpublishedNews</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-info bg-gradient rounded-circle p-3">
+                            <i class="fas fa-calendar text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">This Month News</div>
+                        <div class="h4 mb-0">@ViewBag.ThisMonthNews</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vacancy Statistics Section -->
+    <div class="col-12 mt-5">
+        <h4 class="mb-3">
+            <i class="fas fa-briefcase me-2 text-success"></i>Vacancy Statistics
+        </h4>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-primary bg-gradient rounded-circle p-3">
+                            <i class="fas fa-briefcase text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Total Vacancies</div>
+                        <div class="h4 mb-0">@ViewBag.TotalVacancies</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-gradient rounded-circle p-3">
+                            <i class="fas fa-check-circle text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Active Vacancies</div>
+                        <div class="h4 mb-0">@ViewBag.ActiveVacancies</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-secondary bg-gradient rounded-circle p-3">
+                            <i class="fas fa-file-alt text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Draft Vacancies</div>
+                        <div class="h4 mb-0">@ViewBag.DraftVacancies</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-danger bg-gradient rounded-circle p-3">
+                            <i class="fas fa-times-circle text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Expired Vacancies</div>
+                        <div class="h4 mb-0">@ViewBag.ExpiredVacancies</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sponsors Statistics Section (NEW) -->
+    <div class="col-12 mt-5">
+        <h4 class="mb-3">
+            <i class="fas fa-handshake me-2 text-warning"></i>Sponsors Statistics
+        </h4>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-warning bg-gradient rounded-circle p-3">
+                            <i class="fas fa-handshake text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Total Sponsors</div>
+                        <div class="h4 mb-0">@ViewBag.TotalSponsors</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-gradient rounded-circle p-3">
+                            <i class="fas fa-check-circle text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Published Sponsors</div>
+                        <div class="h4 mb-0">@ViewBag.PublishedSponsors</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-secondary bg-gradient rounded-circle p-3">
+                            <i class="fas fa-clock text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Unpublished Sponsors</div>
+                        <div class="h4 mb-0">@ViewBag.UnpublishedSponsors</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-info bg-gradient rounded-circle p-3">
+                            <i class="fas fa-star text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Recent Sponsors</div>
+                        <div class="h4 mb-0">@ViewBag.RecentSponsors</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documents Statistics Section -->
+    <div class="col-12 mt-5">
+        <h4 class="mb-3">
+            <i class="fas fa-file-pdf me-2 text-danger"></i>Documents Statistics
+        </h4>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-danger bg-gradient rounded-circle p-3">
+                            <i class="fas fa-file-pdf text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Total Documents</div>
+                        <div class="h4 mb-0">@ViewBag.TotalDocuments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-gradient rounded-circle p-3">
+                            <i class="fas fa-check-circle text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Published Documents</div>
+                        <div class="h4 mb-0">@ViewBag.PublishedDocuments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-warning bg-gradient rounded-circle p-3">
+                            <i class="fas fa-clock text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Unpublished Documents</div>
+                        <div class="h4 mb-0">@ViewBag.UnpublishedDocuments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-purple bg-gradient rounded-circle p-3">
+                            <i class="fas fa-star text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Recent Documents</div>
+                        <div class="h4 mb-0">@ViewBag.RecentDocuments</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Media About Us Statistics Section -->
+    <div class="col-12 mt-5">
+        <h4 class="mb-3">
+            <i class="fas fa-newspaper me-2 text-info"></i>Media About Us Statistics
+        </h4>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-info bg-gradient rounded-circle p-3">
+                            <i class="fas fa-newspaper text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Total Media Items</div>
+                        <div class="h4 mb-0">@ViewBag.TotalMediaAboutUs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-gradient rounded-circle p-3">
+                            <i class="fas fa-check-circle text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Published Media</div>
+                        <div class="h4 mb-0">@ViewBag.PublishedMediaAboutUs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-warning bg-gradient rounded-circle p-3">
+                            <i class="fas fa-clock text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Unpublished Media</div>
+                        <div class="h4 mb-0">@ViewBag.UnpublishedMediaAboutUs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-purple bg-gradient rounded-circle p-3">
+                            <i class="fas fa-star text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Recent Media</div>
+                        <div class="h4 mb-0">@ViewBag.RecentMediaAboutUs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact Applications Statistics Section -->
+    <div class="col-12 mt-5">
+        <h4 class="mb-3">
+            <i class="fas fa-envelope me-2 text-secondary"></i>Contact Applications Statistics
+        </h4>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-secondary bg-gradient rounded-circle p-3">
+                            <i class="fas fa-envelope text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Total Contact Applications</div>
+                        <div class="h4 mb-0">@ViewBag.TotalContactApplications</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-info bg-gradient rounded-circle p-3">
+                            <i class="fas fa-calendar-month text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">This Month</div>
+                        <div class="h4 mb-0">@ViewBag.ThisMonthContactApplications</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-gradient rounded-circle p-3">
+                            <i class="fas fa-calendar-week text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">This Week</div>
+                        <div class="h4 mb-0">@ViewBag.ThisWeekContactApplications</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-warning bg-gradient rounded-circle p-3">
+                            <i class="fas fa-calendar-day text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Today</div>
+                        <div class="h4 mb-0">@ViewBag.TodayContactApplications</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions and Alerts -->
+    <div class="col-12 mt-4">
+        <div class="row g-4">
+            <!-- Quick Actions -->
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-bottom">
+                        <h6 class="card-title mb-0">
+                            <i class="fas fa-bolt me-2 text-warning"></i>Quick Actions
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-primary" asp-controller="News" asp-action="Create">
+                                <i class="fas fa-plus me-2"></i>Add New Article
+                            </a>
+                            <a class="btn btn-outline-success" asp-controller="Vacancies" asp-action="Create">
+                                <i class="fas fa-plus me-2"></i>Post New Vacancy
+                            </a>
+                            <a class="btn btn-outline-danger" asp-controller="Documents" asp-action="Create">
+                                <i class="fas fa-plus me-2"></i>Upload Document
+                            </a>
+                            <a class="btn btn-outline-info" asp-controller="MediaAboutUs" asp-action="Create">
+                                <i class="fas fa-plus me-2"></i>Add Media Item
+                            </a>
+                            <a class="btn btn-outline-warning" asp-controller="Sponsors" asp-action="Create">
+                                <i class="fas fa-plus me-2"></i>Add New Sponsor
+                            </a>
+                            <a class="btn btn-outline-secondary" asp-controller="ContactApplications" asp-action="Index">
+                                <i class="fas fa-plus me-2"></i>View Contact Applications
+                            </a>
+                            <div class="row g-2">
+                                <div class="col">
+                                    <a class="btn btn-outline-secondary btn-sm w-100" asp-controller="News" asp-action="Index">
+                                        <i class="fas fa-list me-1"></i>All News
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-outline-secondary btn-sm w-100" asp-controller="Vacancies" asp-action="Index">
+                                        <i class="fas fa-list me-1"></i>All Vacancies
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-outline-secondary btn-sm w-100" asp-controller="Documents" asp-action="Index">
+                                        <i class="fas fa-list me-1"></i>All Documents
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-outline-secondary btn-sm w-100" asp-controller="MediaAboutUs" asp-action="Index">
+                                        <i class="fas fa-list me-1"></i>All Media
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-outline-secondary btn-sm w-100" asp-controller="Sponsors" asp-action="Index">
+                                        <i class="fas fa-list me-1"></i>All Sponsors
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts and Notifications -->
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-bottom">
+                        <h6 class="card-title mb-0">
+                            <i class="fas fa-bell me-2 text-danger"></i>Alerts & Notifications
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.ExpiringThisWeek != null && (int)ViewBag.ExpiringThisWeek > 0)
+                        {
+                            <div class="alert alert-warning mb-3" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>@ViewBag.ExpiringThisWeek</strong> vacancies expiring this week!
+                                <a asp-controller="Vacancies" asp-action="Index" class="alert-link">Review them</a>
+                            </div>
+                        }
+
+                        @if (ViewBag.UnpublishedNews != null && (int)ViewBag.UnpublishedNews > 0)
+                        {
+                            <div class="alert alert-info mb-3" role="alert">
+                                <i class="fas fa-info-circle me-2"></i>
+                                You have <strong>@ViewBag.UnpublishedNews</strong> unpublished news articles.
+                                <a asp-controller="News" asp-action="Index" class="alert-link">Publish them</a>
+                            </div>
+                        }
+
+                        @if (ViewBag.UnpublishedSponsors != null && (int)ViewBag.UnpublishedSponsors > 0)
+                        {
+                            <div class="alert alert-warning mb-3" role="alert">
+                                <i class="fas fa-handshake me-2"></i>
+                                You have <strong>@ViewBag.UnpublishedSponsors</strong> unpublished sponsors.
+                                <a asp-controller="Sponsors" asp-action="Index" class="alert-link">Publish them</a>
+                            </div>
+                        }
+
+                        @if (ViewBag.UnpublishedDocuments != null && (int)ViewBag.UnpublishedDocuments > 0)
+                        {
+                            <div class="alert alert-warning mb-3" role="alert">
+                                <i class="fas fa-file-pdf me-2"></i>
+                                You have <strong>@ViewBag.UnpublishedDocuments</strong> unpublished documents.
+                                <a asp-controller="Documents" asp-action="Index" class="alert-link">Publish them</a>
+                            </div>
+                        }
+
+                        @if (ViewBag.UnpublishedMediaAboutUs != null && (int)ViewBag.UnpublishedMediaAboutUs > 0)
+                        {
+                            <div class="alert alert-secondary mb-3" role="alert">
+                                <i class="fas fa-clock me-2"></i>
+                                You have <strong>@ViewBag.UnpublishedMediaAboutUs</strong> unpublished media items.
+                                <a asp-controller="MediaAboutUs" asp-action="Index" class="alert-link">Publish them</a>
+                            </div>
+                        }
+
+                        @if (ViewBag.DraftVacancies != null && (int)ViewBag.DraftVacancies > 0)
+                        {
+                            <div class="alert alert-secondary mb-3" role="alert">
+                                <i class="fas fa-file-alt me-2"></i>
+                                You have <strong>@ViewBag.DraftVacancies</strong> draft vacancies.
+                                <a asp-controller="Vacancies" asp-action="Index" class="alert-link">Publish them</a>
+                            </div>
+                        }
+
+                        @if ((ViewBag.ExpiringThisWeek == null || (int)ViewBag.ExpiringThisWeek == 0) &&
+                        (ViewBag.UnpublishedNews == null || (int)ViewBag.UnpublishedNews == 0) &&
+                        (ViewBag.UnpublishedSponsors == null || (int)ViewBag.UnpublishedSponsors == 0) &&
+                        (ViewBag.UnpublishedDocuments == null || (int)ViewBag.UnpublishedDocuments == 0) &&
+                        (ViewBag.UnpublishedMediaAboutUs == null || (int)ViewBag.UnpublishedMediaAboutUs == 0) &&
+                        (ViewBag.DraftVacancies == null || (int)ViewBag.DraftVacancies == 0))
+                        {
+                            <div class="text-center text-muted">
+                                <i class="fas fa-check-circle fa-2x mb-2"></i>
+                                <p>All systems running smoothly!<br>No urgent actions required.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Overview -->
+    <div class="col-12 mt-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-chart-line me-2 text-success"></i>This Month Overview
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-2">
+                        <div class="border-end">
+                            <h3 class="text-primary">@ViewBag.ThisMonthNews</h3>
+                            <p class="text-muted mb-0">News Articles</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="border-end">
+                            <h3 class="text-success">@ViewBag.ThisMonthVacancies</h3>
+                            <p class="text-muted mb-0">Vacancies</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="border-end">
+                            <h3 class="text-danger">@ViewBag.ThisMonthDocuments</h3>
+                            <p class="text-muted mb-0">Documents</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="border-end">
+                            <h3 class="text-info">@ViewBag.ThisMonthMediaAboutUs</h3>
+                            <p class="text-muted mb-0">Media Items</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="border-end">
+                            <h3 class="text-warning">@ViewBag.ThisMonthSponsors</h3>
+                            <p class="text-muted mb-0">Sponsors</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <h3 class="text-purple">@(ViewBag.ThisMonthNews + ViewBag.ThisMonthVacancies + ViewBag.ThisMonthDocuments + ViewBag.ThisMonthMediaAboutUs + ViewBag.ThisMonthSponsors)</h3>
+                        <p class="text-muted mb-0">Total Items</p>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="border-end">
+                            <h3 class="text-secondary">@ViewBag.ThisMonthContactApplications</h3>
+                            <p class="text-muted mb-0">Contact Apps</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <h3 class="text-purple">@(ViewBag.ThisMonthNews + ViewBag.ThisMonthVacancies + ViewBag.ThisMonthDocuments + ViewBag.ThisMonthMediaAboutUs + ViewBag.ThisMonthSponsors + ViewBag.ThisMonthContactApplications)</h3>
+                        <p class="text-muted mb-0">Total Items</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Breakdowns -->
+    <div class="col-12 mt-4">
+        <div class="row g-4">
+            <!-- Document Categories Breakdown -->
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom">
+                        <h6 class="card-title mb-0">
+                            <i class="fas fa-chart-pie me-2 text-danger"></i>Documents by Category
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="border-end">
+                                    <h3 class="text-primary">@ViewBag.DocumentsCategory</h3>
+                                    <p class="text-muted mb-0">General Documents</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <h3 class="text-warning">@ViewBag.SecurityAndValuesCategory</h3>
+                                <p class="text-muted mb-0">Security & Values</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sponsors Status Breakdown -->
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom">
+                        <h6 class="card-title mb-0">
+                            <i class="fas fa-chart-pie me-2 text-warning"></i>Sponsors Status
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="border-end">
+                                    <h3 class="text-success">@ViewBag.PublishedSponsors</h3>
+                                    <p class="text-muted mb-0">Published</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <h3 class="text-secondary">@ViewBag.UnpublishedSponsors</h3>
+                                <p class="text-muted mb-0">Unpublished</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-purple {
+        background: linear-gradient(45deg, #6f42c1, #8e44ad) !important;
+    }
+
+    .text-purple {
+        color: #6f42c1 !important;
+    }
+</style>

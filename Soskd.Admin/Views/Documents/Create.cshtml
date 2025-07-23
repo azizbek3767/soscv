@@ -1,0 +1,396 @@
+﻿<!-- Soskd.Admin/Views/Documents/Create.cshtml -->
+@model Soskd.Admin.ViewModels.DocumentViewModel
+@{
+    ViewData["Title"] = "Create Document";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-plus-circle me-2 text-primary"></i>Create Document
+            </h1>
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Display any errors -->
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <h6><i class="fas fa-exclamation-triangle me-2"></i>Please correct the following errors:</h6>
+        <ul class="mb-0">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<form asp-action="Create" method="post" enctype="multipart/form-data" id="documentForm">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Uzbek Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Uzbek Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleUz" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleUz) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleUz" class="form-control" placeholder="Enter title in Uzbek" required />
+                        <span asp-validation-for="TitleUz" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionUz" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionUz)
+                        </label>
+                        <textarea asp-for="DescriptionUz" class="form-control" rows="3" placeholder="Optional description in Uzbek"></textarea>
+                        <span asp-validation-for="DescriptionUz" class="text-danger small"></span>
+                        <div class="form-text">Optional. Brief description of the document.</div>
+                    </div>
+
+                    <!-- Uzbek PDF Upload -->
+                    <div class="mb-3">
+                        <label asp-for="DocumentUz" class="form-label">
+                            <i class="fas fa-upload me-1"></i>@Html.DisplayNameFor(m => m.DocumentUz)
+                            <span class="text-muted">(Optional)</span>
+                        </label>
+                        <input asp-for="DocumentUz" class="form-control" type="file" accept=".pdf" id="documentFileUz" />
+                        <span asp-validation-for="DocumentUz" class="text-danger small"></span>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Optional. Only PDF files are allowed. Maximum file size: 10MB.
+                        </div>
+                    </div>
+
+                    <!-- Uzbek File Info Display -->
+                    <div id="fileInfoUz" class="d-none">
+                        <div class="alert alert-info mb-0">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf fa-2x text-danger me-3"></i>
+                                <div>
+                                    <strong id="fileNameUz"></strong><br>
+                                    <small class="text-muted">
+                                        <span id="fileSizeUz"></span> • PDF Document (Uzbek)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Russian Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Russian Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleRu" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleRu) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleRu" class="form-control" placeholder="Enter title in Russian" required />
+                        <span asp-validation-for="TitleRu" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionRu" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionRu)
+                        </label>
+                        <textarea asp-for="DescriptionRu" class="form-control" rows="3" placeholder="Optional description in Russian"></textarea>
+                        <span asp-validation-for="DescriptionRu" class="text-danger small"></span>
+                        <div class="form-text">Optional. Brief description of the document.</div>
+                    </div>
+
+                    <!-- Russian PDF Upload -->
+                    <div class="mb-3">
+                        <label asp-for="Document" class="form-label">
+                            <i class="fas fa-upload me-1"></i>@Html.DisplayNameFor(m => m.Document)
+                            <span class="text-muted">(Optional)</span>
+                        </label>
+                        <input asp-for="Document" class="form-control" type="file" accept=".pdf" id="documentFile" />
+                        <span asp-validation-for="Document" class="text-danger small"></span>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Optional. Only PDF files are allowed. Maximum file size: 10MB.
+                        </div>
+                    </div>
+
+                    <!-- Russian File Info Display -->
+                    <div id="fileInfo" class="d-none">
+                        <div class="alert alert-info mb-0">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf fa-2x text-danger me-3"></i>
+                                <div>
+                                    <strong id="fileName"></strong><br>
+                                    <small class="text-muted">
+                                        <span id="fileSize"></span> • PDF Document (Russian)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- English Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>English Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleEn" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleEn) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleEn" class="form-control" placeholder="Enter title in English" required />
+                        <span asp-validation-for="TitleEn" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionEn" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionEn)
+                        </label>
+                        <textarea asp-for="DescriptionEn" class="form-control" rows="3" placeholder="Optional description in English"></textarea>
+                        <span asp-validation-for="DescriptionEn" class="text-danger small"></span>
+                        <div class="form-text">Optional. Brief description of the document.</div>
+                    </div>
+
+                    <!-- English PDF Upload -->
+                    <div class="mb-3">
+                        <label asp-for="DocumentEn" class="form-label">
+                            <i class="fas fa-upload me-1"></i>@Html.DisplayNameFor(m => m.DocumentEn)
+                            <span class="text-muted">(Optional)</span>
+                        </label>
+                        <input asp-for="DocumentEn" class="form-control" type="file" accept=".pdf" id="documentFileEn" />
+                        <span asp-validation-for="DocumentEn" class="text-danger small"></span>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Optional. Only PDF files are allowed. Maximum file size: 10MB.
+                        </div>
+                    </div>
+
+                    <!-- English File Info Display -->
+                    <div id="fileInfoEn" class="d-none">
+                        <div class="alert alert-info mb-0">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf fa-2x text-danger me-3"></i>
+                                <div>
+                                    <strong id="fileNameEn"></strong><br>
+                                    <small class="text-muted">
+                                        <span id="fileSizeEn"></span> • PDF Document (English)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Publication Settings -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cog me-2 text-primary"></i>Publication Settings
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Category" class="form-label">
+                            <i class="fas fa-tag me-1"></i>@Html.DisplayNameFor(m => m.Category) <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Category" class="form-select" required>
+                            @foreach (var category in ViewBag.Categories as List<(Soskd.Domain.Enums.DocumentCategory Category, string Uz, string Ru, string En)>)
+                            {
+                                <option value="@category.Category">@category.En</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger small"></span>
+                        <div class="form-text">Choose the appropriate category for this document.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label">
+                            <i class="fas fa-eye me-1"></i>@Html.DisplayNameFor(m => m.Status) <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Status" class="form-select" required>
+                            <option value="1" selected>Published</option>
+                            <option value="2">Unpublished</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                        <div class="form-text">Published documents will be visible on website.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PublishDate" class="form-label">
+                            <i class="fas fa-calendar me-1"></i>@Html.DisplayNameFor(m => m.PublishDate) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="PublishDate" class="form-control" type="datetime-local" required />
+                        <span asp-validation-for="PublishDate" class="text-danger small"></span>
+                        <div class="form-text">When this document should be published.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <i class="fas fa-save me-2"></i>Create Document
+                        </button>
+                        <a class="btn btn-outline-secondary" asp-action="Index">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-light border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-question-circle me-2 text-info"></i>Help
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small mb-0">
+                        <li><i class="fas fa-check text-success me-1"></i> PDF files are optional for each language</li>
+                        <li><i class="fas fa-check text-success me-1"></i> Maximum file size: 10MB per file</li>
+                        <li><i class="fas fa-check text-success me-1"></i> You can upload documents in any combination of languages</li>
+                        <li><i class="fas fa-check text-success me-1"></i> Titles are required in all languages</li>
+                        <li><i class="fas fa-check text-success me-1"></i> Descriptions are optional</li>
+                        <li><i class="fas fa-check text-success me-1"></i> Documents can be downloaded and viewed online when available</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.11/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Set default datetime
+            const publishDateInput = $('#PublishDate');
+            if (publishDateInput.length && !publishDateInput.val()) {
+                const now = new Date();
+                const offset = now.getTimezoneOffset() * 60000;
+                const localISOTime = (new Date(now - offset)).toISOString().slice(0, -1);
+                publishDateInput.val(localISOTime.substring(0, 16));
+            }
+
+            // File upload handling for all three languages
+            function setupFileUpload(fileInputId, fileInfoId, fileNameId, fileSizeId, language) {
+                $(fileInputId).on('change', function(e) {
+                    const file = e.target.files[0];
+                    const fileInfo = $(fileInfoId);
+
+                    if (file) {
+                        // Validate file type
+                        if (file.type !== 'application/pdf') {
+                            alert(`Only PDF files are allowed for ${language} document.`);
+                            $(this).val('');
+                            fileInfo.addClass('d-none');
+                            return;
+                        }
+
+                        // Validate file size (10MB)
+                        if (file.size > 10 * 1024 * 1024) {
+                            alert(`File size must be less than 10MB for ${language} document.`);
+                            $(this).val('');
+                            fileInfo.addClass('d-none');
+                            return;
+                        }
+
+                        // Show file info
+                        $(fileNameId).text(file.name);
+                        $(fileSizeId).text(formatFileSize(file.size));
+                        fileInfo.removeClass('d-none');
+                    } else {
+                        fileInfo.addClass('d-none');
+                    }
+                });
+            }
+
+            // Setup file uploads for all languages
+            setupFileUpload('#documentFileUz', '#fileInfoUz', '#fileNameUz', '#fileSizeUz', 'Uzbek');
+            setupFileUpload('#documentFile', '#fileInfo', '#fileName', '#fileSize', 'Russian');
+            setupFileUpload('#documentFileEn', '#fileInfoEn', '#fileNameEn', '#fileSizeEn', 'English');
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+                return (bytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+            }
+
+            // Form submission
+                    $(document).ready(function() {
+            // DDDDDDDDDDDDDDDDDDDDDDDDDDDDD - Updated form validation for optional files
+            // Form submission
+            $('#documentForm').on('submit', function(e) {
+                // Validate required fields (only text fields, files are optional)
+                let isValid = true;
+                let missingFields = [];
+
+                // Check text fields only
+                $(this).find('input[required], select[required]').each(function() {
+                    const value = $(this).val();
+                    const fieldName = $(this).prev('label').text().replace('*', '').trim() || $(this).attr('name') || 'Unknown';
+
+                    if (!value || value.trim() === '') {
+                        missingFields.push(fieldName);
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                    }
+                });
+
+                // Note: File uploads are now optional, so we don't validate them as required
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields:\n- ' + missingFields.join('\n- '));
+                    return false;
+                }
+
+                // Show loading state
+                const submitBtn = $('#submitBtn');
+                const originalText = submitBtn.html();
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Uploading...').prop('disabled', true);
+
+                // Re-enable button after timeout in case of issues
+                setTimeout(function() {
+                    submitBtn.html(originalText).prop('disabled', false);
+                }, 120000); // 2 minutes for multiple file uploads
+
+                return true;
+            });
+            // DDDDDDDDDDDDDDDDDDDDDDDDDDDDD - End of updated form validation
+        });
+        });
+    </script>
+}

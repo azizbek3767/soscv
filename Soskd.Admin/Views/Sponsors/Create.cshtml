@@ -1,0 +1,209 @@
+﻿<!-- Soskd.Admin/Views/Sponsors/Create.cshtml -->
+@model Soskd.Admin.ViewModels.SponsorViewModel
+@{
+    ViewData["Title"] = "Create Sponsor";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-plus-circle me-2 text-primary"></i>Create Sponsor
+            </h1>
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Display any errors -->
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <h6><i class="fas fa-exclamation-triangle me-2"></i>Validation Errors:</h6>
+        <ul class="mb-0">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Sponsor Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>Sponsor Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <!-- Uzbek Title -->
+                    <div class="mb-3">
+                        <label asp-for="TitleUz" class="form-label">
+                            <i class="fas fa-flag me-1"></i>@Html.DisplayNameFor(m => m.TitleUz) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleUz" class="form-control" placeholder="Enter sponsor name in Uzbek" required />
+                        <span asp-validation-for="TitleUz" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Russian Title -->
+                    <div class="mb-3">
+                        <label asp-for="TitleRu" class="form-label">
+                            <i class="fas fa-flag me-1"></i>@Html.DisplayNameFor(m => m.TitleRu) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleRu" class="form-control" placeholder="Enter sponsor name in Russian" required />
+                        <span asp-validation-for="TitleRu" class="text-danger small"></span>
+                    </div>
+
+                    <!-- English Title -->
+                    <div class="mb-3">
+                        <label asp-for="TitleEn" class="form-label">
+                            <i class="fas fa-flag me-1"></i>@Html.DisplayNameFor(m => m.TitleEn) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleEn" class="form-control" placeholder="Enter sponsor name in English" required />
+                        <span asp-validation-for="TitleEn" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Website Link -->
+                    <div class="mb-3">
+                        <label asp-for="Link" class="form-label">
+                            <i class="fas fa-link me-1"></i>@Html.DisplayNameFor(m => m.Link) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Link" class="form-control" type="url" placeholder="https://example.com" required />
+                        <span asp-validation-for="Link" class="text-danger small"></span>
+                        <div class="form-text">Enter the full URL including https://</div>
+                    </div>
+
+                    <!-- Logo/Photo Upload -->
+                    <div class="mb-3">
+                        <label asp-for="Photo" class="form-label">
+                            <i class="fas fa-image me-1"></i>@Html.DisplayNameFor(m => m.Photo) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Photo" class="form-control" type="file" accept="image/*" required />
+                        <span asp-validation-for="Photo" class="text-danger small"></span>
+                        <div class="form-text">Upload sponsor logo. Recommended size: 200x100px. Supports JPG, PNG, GIF.</div>
+
+                        <!-- Image preview -->
+                        <div id="imagePreview" class="mt-3" style="display: none;">
+                            <img id="previewImg" class="img-thumbnail" style="max-width: 200px; max-height: 100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Settings -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cog me-2 text-primary"></i>Settings
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <!-- Display Order -->
+                    <div class="mb-3">
+                        <label asp-for="DisplayOrder" class="form-label">
+                            <i class="fas fa-sort-numeric-up me-1"></i>@Html.DisplayNameFor(m => m.DisplayOrder)
+                        </label>
+                        <input asp-for="DisplayOrder" class="form-control" type="number" min="0" />
+                        <span asp-validation-for="DisplayOrder" class="text-danger small"></span>
+                        <div class="form-text">Lower numbers appear first. Use 0 for default ordering.</div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label">
+                            <i class="fas fa-eye me-1"></i>@Html.DisplayNameFor(m => m.Status) <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Status" class="form-select" required>
+                            <option value="1" selected>Published</option>
+                            <option value="2">Unpublished</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                        <div class="form-text">Published sponsors will be visible on the website.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i>Create Sponsor
+                        </button>
+                        <a class="btn btn-outline-secondary" asp-action="Index">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.11/dist/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Image preview functionality
+            $('#Photo').on('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#previewImg').attr('src', e.target.result);
+                        $('#imagePreview').show();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    $('#imagePreview').hide();
+                }
+            });
+
+            // Form validation
+            $('form').on('submit', function(e) {
+                const requiredFields = $(this).find('[required]');
+                let isValid = true;
+
+                requiredFields.each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    $('<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">' +
+                      '<i class="fas fa-exclamation-circle me-2"></i>Please fill in all required fields.' +
+                      '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                      '</div>').prependTo('.container-fluid');
+
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 500);
+                }
+            });
+
+            // URL validation helper
+            $('#Link').on('blur', function() {
+                const url = $(this).val().trim();
+                if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
+                    $(this).val('https://' + url);
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,539 @@
+﻿<!-- Soskd.Admin/Views/News/Edit.cshtml - Updated with language cards -->
+@model Soskd.Admin.ViewModels.NewsViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "Edit News";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-edit me-2 text-warning"></i>Edit News
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@Model.Id">
+                    <i class="fas fa-eye me-2"></i>View Details
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="SmallPhotoUrl" type="hidden" />
+    <input asp-for="LargePhotoUrl" type="hidden" />
+    <input asp-for="CreatedAt" type="hidden" />
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Uzbek Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Uzbek Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleUz" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleUz) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleUz" class="form-control" placeholder="Enter title in Uzbek" />
+                        <span asp-validation-for="TitleUz" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionUz" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionUz) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionUz" class="form-control rich-text-editor" rows="4"></textarea>
+                        <span asp-validation-for="DescriptionUz" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SlugUz" class="form-label">
+                            <i class="fas fa-link me-1"></i>@Html.DisplayNameFor(m => m.SlugUz)
+                        </label>
+                        <input asp-for="SlugUz" class="form-control" placeholder="Auto-generated if empty" />
+                        <span asp-validation-for="SlugUz" class="text-danger small"></span>
+                        <div class="form-text">URL-friendly version of the title. Leave empty for auto-generation.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaTitleUz" class="form-label">
+                            <i class="fas fa-tags me-1"></i>@Html.DisplayNameFor(m => m.MetaTitleUz)
+                        </label>
+                        <input asp-for="MetaTitleUz" class="form-control" placeholder="Uses title if empty" />
+                        <span asp-validation-for="MetaTitleUz" class="text-danger small"></span>
+                        <div class="form-text">SEO title for search engines. Uses main title if empty.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaDescriptionUz" class="form-label">
+                            <i class="fas fa-file-text me-1"></i>@Html.DisplayNameFor(m => m.MetaDescriptionUz)
+                        </label>
+                        <textarea asp-for="MetaDescriptionUz" class="form-control" rows="2" placeholder="Uses title if empty"></textarea>
+                        <span asp-validation-for="MetaDescriptionUz" class="text-danger small"></span>
+                        <div class="form-text">SEO description for search engines. Uses main title if empty.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Russian Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Russian Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleRu" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleRu) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleRu" class="form-control" placeholder="Enter title in Russian" />
+                        <span asp-validation-for="TitleRu" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionRu" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionRu) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionRu" class="form-control rich-text-editor" rows="4"></textarea>
+                        <span asp-validation-for="DescriptionRu" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SlugRu" class="form-label">
+                            <i class="fas fa-link me-1"></i>@Html.DisplayNameFor(m => m.SlugRu)
+                        </label>
+                        <input asp-for="SlugRu" class="form-control" placeholder="Auto-generated if empty" />
+                        <span asp-validation-for="SlugRu" class="text-danger small"></span>
+                        <div class="form-text">URL-friendly version of the title. Leave empty for auto-generation.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaTitleRu" class="form-label">
+                            <i class="fas fa-tags me-1"></i>@Html.DisplayNameFor(m => m.MetaTitleRu)
+                        </label>
+                        <input asp-for="MetaTitleRu" class="form-control" placeholder="Uses title if empty" />
+                        <span asp-validation-for="MetaTitleRu" class="text-danger small"></span>
+                        <div class="form-text">SEO title for search engines. Uses main title if empty.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaDescriptionRu" class="form-label">
+                            <i class="fas fa-file-text me-1"></i>@Html.DisplayNameFor(m => m.MetaDescriptionRu)
+                        </label>
+                        <textarea asp-for="MetaDescriptionRu" class="form-control" rows="2" placeholder="Uses title if empty"></textarea>
+                        <span asp-validation-for="MetaDescriptionRu" class="text-danger small"></span>
+                        <div class="form-text">SEO description for search engines. Uses main title if empty.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- English Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>English Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleEn" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleEn) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleEn" class="form-control" placeholder="Enter title in English" />
+                        <span asp-validation-for="TitleEn" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionEn" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionEn) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionEn" class="form-control rich-text-editor" rows="4"></textarea>
+                        <span asp-validation-for="DescriptionEn" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SlugEn" class="form-label">
+                            <i class="fas fa-link me-1"></i>@Html.DisplayNameFor(m => m.SlugEn)
+                        </label>
+                        <input asp-for="SlugEn" class="form-control" placeholder="Auto-generated if empty" />
+                        <span asp-validation-for="SlugEn" class="text-danger small"></span>
+                        <div class="form-text">URL-friendly version of the title. Leave empty for auto-generation.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaTitleEn" class="form-label">
+                            <i class="fas fa-tags me-1"></i>@Html.DisplayNameFor(m => m.MetaTitleEn)
+                        </label>
+                        <input asp-for="MetaTitleEn" class="form-control" placeholder="Uses title if empty" />
+                        <span asp-validation-for="MetaTitleEn" class="text-danger small"></span>
+                        <div class="form-text">SEO title for search engines. Uses main title if empty.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaDescriptionEn" class="form-label">
+                            <i class="fas fa-file-text me-1"></i>@Html.DisplayNameFor(m => m.MetaDescriptionEn)
+                        </label>
+                        <textarea asp-for="MetaDescriptionEn" class="form-control" rows="2" placeholder="Uses title if empty"></textarea>
+                        <span asp-validation-for="MetaDescriptionEn" class="text-danger small"></span>
+                        <div class="form-text">SEO description for search engines. Uses main title if empty.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photos (Common for all languages) -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-images me-2 text-primary"></i>Photos
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="SmallPhoto" class="form-label">
+                                <i class="fas fa-image me-1"></i>@Html.DisplayNameFor(m => m.SmallPhoto)
+                            </label>
+                            @if (!string.IsNullOrEmpty(Model.SmallPhotoUrl) && apiFileService != null)
+                            {
+                                <div class="mb-2">
+                                    <img src="@apiFileService.GetApiFileUrl(@Model.SmallPhotoUrl)" alt="Current Small Photo" class="img-thumbnail d-block" style="max-width: 200px; max-height: 150px;">
+                                    <div class="form-text text-muted">Current small photo</div>
+                                </div>
+                            }
+                            <input asp-for="SmallPhoto" class="form-control" type="file" accept="image/*" />
+                            <span asp-validation-for="SmallPhoto" class="text-danger small"></span>
+                            <div class="form-text">Leave empty to keep current photo. Recommended size: 400x300px</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LargePhoto" class="form-label">
+                                <i class="fas fa-image me-1"></i>@Html.DisplayNameFor(m => m.LargePhoto)
+                            </label>
+                            @if (!string.IsNullOrEmpty(Model.LargePhotoUrl) && apiFileService != null)
+                            {
+                                <div class="mb-2">
+                                    <img src="@apiFileService.GetApiFileUrl(@Model.LargePhotoUrl)" alt="Current Large Photo" class="img-thumbnail d-block" style="max-width: 200px; max-height: 150px;">
+                                    <div class="form-text text-muted">Current large photo</div>
+                                </div>
+                            }
+                            <input asp-for="LargePhoto" class="form-control" type="file" accept="image/*" />
+                            <span asp-validation-for="LargePhoto" class="text-danger small"></span>
+                            <div class="form-text">Leave empty to keep current photo. Recommended size: 800x600px</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Publication Settings -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cog me-2 text-primary"></i>Publication Settings
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Category" class="form-label">
+                            <i class="fas fa-tag me-1"></i>@Html.DisplayNameFor(m => m.Category)
+                        </label>
+                        <select asp-for="Category" class="form-select">
+                            <option value="">Select Category</option>
+                            @foreach (var category in ViewBag.Categories as List<(Soskd.Domain.Enums.NewsCategory Category, string Uz, string Ru, string En)>)
+                            {
+                                <option value="@category.Category">@category.En</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Category" class="text-danger small"></span>
+                        <div class="form-text">Optional. Helps organize news content.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label">
+                            <i class="fas fa-eye me-1"></i>@Html.DisplayNameFor(m => m.Status) <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="1">Published</option>
+                            <option value="2">Unpublished</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                        <div class="form-text">Published news will be visible on website.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PublishedDate" class="form-label">
+                            <i class="fas fa-calendar me-1"></i>@Html.DisplayNameFor(m => m.PublishedDate) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="PublishedDate" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="PublishedDate" class="text-danger small"></span>
+                        <div class="form-text">When this news should be published.</div>
+                    </div>
+
+                    @if (Model.CreatedAt.HasValue)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-info-circle me-1"></i>Created At
+                            </label>
+                            <div class="form-control-plaintext small text-muted">
+                                @Model.CreatedAt.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fas fa-save me-2"></i>Update News
+                        </button>
+                        <a class="btn btn-outline-secondary" asp-action="Index">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                            <i class="fas fa-trash me-2"></i>Delete News
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-light border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2 text-info"></i>Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small mb-0">
+                        <li><i class="fas fa-hashtag text-muted me-1"></i> <strong>ID:</strong> #@Model.Id</li>
+                        @if (Model.CreatedAt.HasValue)
+                        {
+                            <li><i class="fas fa-calendar text-muted me-1"></i> <strong>Created:</strong> @Model.CreatedAt.Value.ToString("MMM dd, yyyy")</li>
+                        }
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            <li><i class="fas fa-clock text-muted me-1"></i> <strong>Updated:</strong> @Model.UpdatedAt.Value.ToString("MMM dd, yyyy")</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.11/dist/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        // SLUG FORMATTING FUNCTIONS (same as Create page)
+        function formatSlug(input) {
+            if (!input) return '';
+
+            return input
+                .toLowerCase()
+                .replace(/\s+/g, ' ')
+                .trim()
+                .replace(/\s/g, '-')
+                .replace(/['"]/g, '')
+                .replace(/[^\w\-]/g, '')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function formatSlugAdvanced(input) {
+            if (!input) return '';
+
+            const cyrillicMap = {
+                'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
+                'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
+                'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+                'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
+                'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
+                'ў': 'o', 'қ': 'q', 'ҳ': 'h', 'ғ': 'g'
+            };
+
+            let result = input.toLowerCase();
+
+            for (const [cyrillic, latin] of Object.entries(cyrillicMap)) {
+                result = result.replace(new RegExp(cyrillic, 'g'), latin);
+            }
+
+            return result
+                .replace(/\s+/g, ' ')
+                .trim()
+                .replace(/\s/g, '-')
+                .replace(/[^a-z0-9\-]/g, '')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function showSlugFormatNotification(original, formatted) {
+            const toast = document.createElement('div');
+            toast.innerHTML = `
+                <div class="alert alert-success alert-dismissible fade show position-fixed"
+                     style="top: 20px; right: 20px; z-index: 9999; max-width: 400px;" role="alert">
+                    <i class="fas fa-magic me-2"></i>
+                    <strong>Slug formatted!</strong><br>
+                    <small>"${original}" → "${formatted}"</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 5000);
+        }
+
+        $(document).ready(function() {
+            console.log('Edit page: Setting up slug formatting...');
+
+            // Format datetime for input
+            const publishedDateInput = $('#PublishedDate');
+            if (publishedDateInput.length && publishedDateInput.val()) {
+                const date = new Date(publishedDateInput.val());
+                const offset = date.getTimezoneOffset() * 60000;
+                const localISOTime = (new Date(date - offset)).toISOString().slice(0, -1);
+                publishedDateInput.val(localISOTime.substring(0, 16));
+            }
+
+            // SETUP SLUG FORMATTING FOR EDIT PAGE
+            const slugFields = $('input[name$="SlugUz"], input[name$="SlugRu"], input[name$="SlugEn"]');
+
+            slugFields.each(function() {
+                const field = $(this);
+                const fieldName = field.attr('name');
+
+                console.log('Setting up slug formatting for:', fieldName);
+
+                // Add visual indicators
+                field.attr('placeholder', 'Auto-formatted on blur (e.g., "Hello World" → "hello-world")');
+                field.css('font-family', 'monospace');
+
+                // Format on blur
+                field.on('blur', function() {
+                    const originalValue = this.value;
+
+                    if (originalValue.trim()) {
+                        const isEnglish = fieldName.includes('SlugEn');
+                        const formattedValue = isEnglish ?
+                            formatSlug(originalValue) :
+                            formatSlugAdvanced(originalValue);
+
+                        if (formattedValue !== originalValue) {
+                            this.value = formattedValue;
+
+                            // Visual feedback
+                            $(this).css({
+                                'background-color': '#d4edda',
+                                'border-color': '#28a745'
+                            });
+
+                            showSlugFormatNotification(originalValue, formattedValue);
+                            console.log(`Slug formatted: "${originalValue}" → "${formattedValue}"`);
+
+                            setTimeout(() => {
+                                $(this).css({
+                                    'background-color': '',
+                                    'border-color': ''
+                                });
+                            }, 2000);
+                        }
+                    }
+                });
+
+                // Format on Enter key
+                field.on('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        $(this).blur();
+                    }
+                });
+
+                // Show preview while typing
+                field.on('input', function() {
+                    const currentValue = this.value;
+                    if (currentValue.trim()) {
+                        const isEnglish = fieldName.includes('SlugEn');
+                        const preview = isEnglish ?
+                            formatSlug(currentValue) :
+                            formatSlugAdvanced(currentValue);
+
+                        if (preview !== currentValue) {
+                            $(this).attr('title', `Will become: ${preview}`);
+                        } else {
+                            $(this).removeAttr('title');
+                        }
+                    }
+                });
+            });
+
+            // Image preview functionality
+            $('input[type="file"]').on('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // Remove existing preview
+                        $(e.target).closest('.mb-3').find('.new-image-preview').remove();
+
+                        // Add new preview
+                        const preview = $('<div class="new-image-preview mt-2">' +
+                            '<img src="' + e.target.result + '" alt="New Photo Preview" class="img-thumbnail d-block" style="max-width: 200px; max-height: 150px;">' +
+                            '<div class="form-text text-success">New photo preview</div>' +
+                            '</div>');
+                        $(e.target).closest('.mb-3').append(preview);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Form validation enhancement
+            $('form').on('submit', function(e) {
+                const requiredFields = $(this).find('[required]');
+                let isValid = true;
+
+                requiredFields.each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    $('<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">' +
+                      '<i class="fas fa-exclamation-circle me-2"></i>Please fill in all required fields.' +
+                      '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                      '</div>').prependTo('.container-fluid');
+
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 500);
+                }
+            });
+
+            console.log('Edit page: All event handlers attached successfully');
+        });
+    </script>
+}

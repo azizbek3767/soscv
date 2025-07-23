@@ -1,0 +1,558 @@
+﻿<!-- Soskd.Admin/Views/Documents/Details.cshtml -->
+@model Soskd.Admin.ViewModels.DocumentViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "Document Details";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-eye me-2 text-info"></i>Document Details
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="fas fa-edit me-2"></i>Edit
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Document Information with Language Tabs -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">@Model.TitleEn</h5>
+                    @if (Model.Status == Soskd.Domain.Enums.DocumentStatus.Published)
+                    {
+                        <span class="badge status-published">
+                            <i class="fas fa-check me-1"></i>Published
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge status-unpublished">
+                            <i class="fas fa-clock me-1"></i>Unpublished
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- PDF Documents Display -->
+                <div class="mb-4">
+                    <h6 class="mb-3">PDF Documents by Language</h6>
+                    <div class="row">
+                        <!-- Uzbek Document -->
+                        @if (!string.IsNullOrEmpty(Model.FileUrlUz) && apiFileService != null)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="alert alert-light border">
+                                    <div class="text-center">
+                                        <i class="fas fa-file-pdf fa-3x text-danger mb-2"></i>
+                                        <h6 class="mb-1">Uzbek Version</h6>
+                                        <p class="text-muted mb-2">@Model.FileNameUz</p>
+                                        <p class="text-muted mb-2">@Model.FileSizeFormattedUz</p>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlUz)" target="_blank" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </a>
+                                            <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlUz)" download class="btn btn-success btn-sm">
+                                                <i class="fas fa-download me-1"></i>Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Russian Document -->
+                        @if (!string.IsNullOrEmpty(Model.FileUrl) && apiFileService != null)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="alert alert-light border">
+                                    <div class="text-center">
+                                        <i class="fas fa-file-pdf fa-3x text-danger mb-2"></i>
+                                        <h6 class="mb-1">Russian Version</h6>
+                                        <p class="text-muted mb-2">@Model.FileName</p>
+                                        <p class="text-muted mb-2">@Model.FileSizeFormatted</p>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="@apiFileService.GetApiFileUrl(@Model.FileUrl)" target="_blank" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </a>
+                                            <a href="@apiFileService.GetApiFileUrl(@Model.FileUrl)" download class="btn btn-success btn-sm">
+                                                <i class="fas fa-download me-1"></i>Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- English Document -->
+                        @if (!string.IsNullOrEmpty(Model.FileUrlEn) && apiFileService != null)
+                        {
+                            <div class="col-md-4 mb-3">
+                                <div class="alert alert-light border">
+                                    <div class="text-center">
+                                        <i class="fas fa-file-pdf fa-3x text-danger mb-2"></i>
+                                        <h6 class="mb-1">English Version</h6>
+                                        <p class="text-muted mb-2">@Model.FileNameEn</p>
+                                        <p class="text-muted mb-2">@Model.FileSizeFormattedEn</p>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlEn)" target="_blank" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </a>
+                                            <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlEn)" download class="btn btn-success btn-sm">
+                                                <i class="fas fa-download me-1"></i>Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Content in Language Tabs -->
+                <ul class="nav nav-tabs" id="contentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="uzbek-tab" data-bs-toggle="tab" data-bs-target="#uzbek" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Uzbek
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="russian-tab" data-bs-toggle="tab" data-bs-target="#russian" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Russian
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="english-tab" data-bs-toggle="tab" data-bs-target="#english" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>English
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3" id="contentTabsContent">
+                    <!-- Uzbek Content -->
+                    <div class="tab-pane fade show active" id="uzbek" role="tabpanel">
+                        <div class="mb-3">
+                            <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                            <p class="mb-2">@Model.TitleUz</p>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.DescriptionUz))
+                        {
+                            <div class="mb-3">
+                                <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                                <div class="mt-2 border rounded p-3 bg-light">
+                                    @Model.DescriptionUz
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                                <p class="text-muted fst-italic mt-2">No description provided</p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.FileUrlUz))
+                        {
+                            <div class="mb-3">
+                                <strong><i class="fas fa-file-pdf me-1"></i>Document:</strong>
+                                <div class="mt-2">
+                                    <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlUz)" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>View Uzbek PDF
+                                    </a>
+                                    <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlUz)" download class="btn btn-outline-success btn-sm">
+                                        <i class="fas fa-download me-1"></i>Download
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Russian Content -->
+                    <div class="tab-pane fade" id="russian" role="tabpanel">
+                        <div class="mb-3">
+                            <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                            <p class="mb-2">@Model.TitleRu</p>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.DescriptionRu))
+                        {
+                            <div class="mb-3">
+                                <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                                <div class="mt-2 border rounded p-3 bg-light">
+                                    @Model.DescriptionRu
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                                <p class="text-muted fst-italic mt-2">No description provided</p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.FileUrl))
+                        {
+                            <div class="mb-3">
+                                <strong><i class="fas fa-file-pdf me-1"></i>Document:</strong>
+                                <div class="mt-2">
+                                    <a href="@apiFileService.GetApiFileUrl(@Model.FileUrl)" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>View Russian PDF
+                                    </a>
+                                    <a href="@apiFileService.GetApiFileUrl(@Model.FileUrl)" download class="btn btn-outline-success btn-sm">
+                                        <i class="fas fa-download me-1"></i>Download
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- English Content -->
+                    <div class="tab-pane fade" id="english" role="tabpanel">
+                        <div class="mb-3">
+                            <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                            <p class="mb-2">@Model.TitleEn</p>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.DescriptionEn))
+                        {
+                            <div class="mb-3">
+                                <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                                <div class="mt-2 border rounded p-3 bg-light">
+                                    @Model.DescriptionEn
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                                <p class="text-muted fst-italic mt-2">No description provided</p>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.FileUrlEn))
+                        {
+                            <div class="mb-3">
+                                <strong><i class="fas fa-file-pdf me-1"></i>Document:</strong>
+                                <div class="mt-2">
+                                    <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlEn)" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>View English PDF
+                                    </a>
+                                    <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlEn)" download class="btn btn-outline-success btn-sm">
+                                        <i class="fas fa-download me-1"></i>Download
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Information Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-file-alt me-2 text-primary"></i>File Information Summary
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Uzbek File Info -->
+                    <div class="col-md-4">
+                        <h6 class="text-primary">Uzbek Document</h6>
+                        <dl class="row mb-0 small">
+                            <dt class="col-sm-6">File Name:</dt>
+                            <dd class="col-sm-6"><code class="small">@Model.FileNameUz</code></dd>
+
+                            <dt class="col-sm-6">File Size:</dt>
+                            <dd class="col-sm-6">
+                                <span class="badge bg-light text-dark">@Model.FileSizeFormattedUz</span>
+                            </dd>
+
+                            <dt class="col-sm-6">Actions:</dt>
+                            <dd class="col-sm-6">
+                                <div class="btn-group-sm">
+                                    <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlUz)" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-external-link-alt me-1"></i>Open
+                                    </a>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <!-- Russian File Info -->
+                    <div class="col-md-4">
+                        <h6 class="text-primary">Russian Document</h6>
+                        <dl class="row mb-0 small">
+                            <dt class="col-sm-6">File Name:</dt>
+                            <dd class="col-sm-6"><code class="small">@Model.FileName</code></dd>
+
+                            <dt class="col-sm-6">File Size:</dt>
+                            <dd class="col-sm-6">
+                                <span class="badge bg-light text-dark">@Model.FileSizeFormatted</span>
+                            </dd>
+
+                            <dt class="col-sm-6">Actions:</dt>
+                            <dd class="col-sm-6">
+                                <div class="btn-group-sm">
+                                    <a href="@apiFileService.GetApiFileUrl(@Model.FileUrl)" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-external-link-alt me-1"></i>Open
+                                    </a>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <!-- English File Info -->
+                    <div class="col-md-4">
+                        <h6 class="text-primary">English Document</h6>
+                        <dl class="row mb-0 small">
+                            <dt class="col-sm-6">File Name:</dt>
+                            <dd class="col-sm-6"><code class="small">@Model.FileNameEn</code></dd>
+
+                            <dt class="col-sm-6">File Size:</dt>
+                            <dd class="col-sm-6">
+                                <span class="badge bg-light text-dark">@Model.FileSizeFormattedEn</span>
+                            </dd>
+
+                            <dt class="col-sm-6">Actions:</dt>
+                            <dd class="col-sm-6">
+                                <div class="btn-group-sm">
+                                    <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlEn)" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-external-link-alt me-1"></i>Open
+                                    </a>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">ID:</dt>
+                    <dd class="col-sm-7">#@Model.Id</dd>
+
+                    <dt class="col-sm-5">Category:</dt>
+                    <dd class="col-sm-7">
+                        <span class="badge bg-info">@Model.CategoryDisplayEn</span>
+                    </dd>
+
+                    <dt class="col-sm-5">Status:</dt>
+                    <dd class="col-sm-7">
+                        @if (Model.Status == Soskd.Domain.Enums.DocumentStatus.Published)
+                        {
+                            <span class="badge status-published">
+                                <i class="fas fa-check me-1"></i>Published
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge status-unpublished">
+                                <i class="fas fa-clock me-1"></i>Unpublished
+                            </span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5">Published:</dt>
+                    <dd class="col-sm-7">
+                        <small>@Model.PublishDate.ToString("MMM dd, yyyy")<br>@Model.PublishDate.ToString("HH:mm")</small>
+                    </dd>
+
+                    @if (Model.CreatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.CreatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.CreatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+
+                    @if (Model.UpdatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Updated:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.UpdatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.UpdatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+
+        <!-- Category Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-tag me-2 text-primary"></i>Category Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Uzbek:</dt>
+                    <dd class="col-sm-8">@Model.CategoryDisplayUz</dd>
+
+                    <dt class="col-sm-4">Russian:</dt>
+                    <dd class="col-sm-8">@Model.CategoryDisplayRu</dd>
+
+                    <dt class="col-sm-4">English:</dt>
+                    <dd class="col-sm-8">@Model.CategoryDisplayEn</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                        <i class="fas fa-edit me-2"></i>Edit Document
+                    </a>
+                    <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                        <i class="fas fa-trash me-2"></i>Delete Document
+                    </a>
+                    <a class="btn btn-outline-secondary" asp-action="Index">
+                        <i class="fas fa-list me-2"></i>All Documents
+                    </a>
+                    <hr>
+                    <div class="row">
+                        <div class="col-4">
+                            <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlUz)" target="_blank" class="btn btn-primary btn-sm w-100">
+                                <i class="fas fa-eye me-1"></i>View UZ
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="@apiFileService.GetApiFileUrl(@Model.FileUrl)" target="_blank" class="btn btn-primary btn-sm w-100">
+                                <i class="fas fa-eye me-1"></i>View RU
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="@apiFileService.GetApiFileUrl(@Model.FileUrlEn)" target="_blank" class="btn btn-primary btn-sm w-100">
+                                <i class="fas fa-eye me-1"></i>View EN
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frontend Preview -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-header bg-light border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-desktop me-2 text-success"></i>Frontend Preview
+                </h6>
+            </div>
+            <div class="card-body">
+                <!-- Language Selector for Preview -->
+                <div class="mb-3">
+                    <select class="form-select form-select-sm" id="previewLanguage">
+                        <option value="uz">Uzbek</option>
+                        <option value="ru" selected>Russian</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+
+                <!-- Preview Content -->
+                <div class="border rounded p-3 bg-white" id="previewContent">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-file-pdf fa-2x text-danger me-3 mt-1"></i>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1" id="previewTitle">@Model.TitleRu</h6>
+                            <p class="text-muted small mb-2" id="previewDescription">@Model.DescriptionRu</p>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary btn-sm" id="previewDownload">
+                                    <i class="fas fa-download me-1"></i>Download
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" id="previewView">
+                                    <i class="fas fa-eye me-1"></i>View Online
+                                </button>
+                            </div>
+                            <div class="mt-1">
+                                <small class="text-muted" id="previewSize">@Model.FileSizeFormatted</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-text mt-2">
+                    <i class="fas fa-info-circle me-1"></i>
+                    This is how the document will appear on the frontend in the selected language.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Preview language switcher
+            $('#previewLanguage').on('change', function() {
+                const lang = $(this).val();
+                updatePreview(lang);
+            });
+
+            function updatePreview(lang) {
+                const titles = {
+                    'uz': '@Html.Raw(Json.Serialize(Model.TitleUz))',
+                    'ru': '@Html.Raw(Json.Serialize(Model.TitleRu))',
+                    'en': '@Html.Raw(Json.Serialize(Model.TitleEn))'
+                };
+
+                const descriptions = {
+                    'uz': '@Html.Raw(Json.Serialize(Model.DescriptionUz ?? ""))',
+                    'ru': '@Html.Raw(Json.Serialize(Model.DescriptionRu ?? ""))',
+                    'en': '@Html.Raw(Json.Serialize(Model.DescriptionEn ?? ""))'
+                };
+
+                const sizes = {
+                    'uz': '@Model.FileSizeFormattedUz',
+                    'ru': '@Model.FileSizeFormatted',
+                    'en': '@Model.FileSizeFormattedEn'
+                };
+
+                const urls = {
+                    'uz': '@(apiFileService?.GetApiFileUrl(Model.FileUrlUz) ?? "")',
+                    'ru': '@(apiFileService?.GetApiFileUrl(Model.FileUrl) ?? "")',
+                    'en': '@(apiFileService?.GetApiFileUrl(Model.FileUrlEn) ?? "")'
+                };
+
+                $('#previewTitle').text(titles[lang]);
+                $('#previewDescription').text(descriptions[lang] || 'No description available');
+                $('#previewSize').text(sizes[lang]);
+
+                $('#previewDownload, #previewView').off('click').on('click', function() {
+                    if (urls[lang]) {
+                        window.open(urls[lang], '_blank');
+                    }
+                });
+            }
+
+            // Initialize with Russian
+            updatePreview('ru');
+        });
+    </script>
+}

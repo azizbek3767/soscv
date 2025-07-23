@@ -1,0 +1,225 @@
+﻿@model Soskd.Admin.ViewModels.DonationStatsViewModel
+@{
+    ViewData["Title"] = "Donation Statistics";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-chart-bar me-2 text-success"></i>Donation Statistics
+            </h1>
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                <i class="fas fa-list me-2"></i>All Donations
+            </a>
+        </div>
+    </div>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Summary Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-primary bg-gradient rounded-circle p-3">
+                            <i class="fas fa-heart text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Total Donations</div>
+                        <div class="h4 mb-0">@Model.TotalDonations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-gradient rounded-circle p-3">
+                            <i class="fas fa-check-circle text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Completed</div>
+                        <div class="h4 mb-0">@Model.CompletedDonations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-warning bg-gradient rounded-circle p-3">
+                            <i class="fas fa-clock text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Pending</div>
+                        <div class="h4 mb-0">@Model.PendingDonations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-danger bg-gradient rounded-circle p-3">
+                            <i class="fas fa-times-circle text-white fa-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="text-muted small">Failed</div>
+                        <div class="h4 mb-0">@Model.FailedDonations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Amount Statistics -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="text-primary mb-2">
+                    <i class="fas fa-coins fa-2x"></i>
+                </div>
+                <h5 class="card-title">Total Amount</h5>
+                <h3 class="text-success">@Model.TotalAmount.ToString("N0") UZS</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="text-info mb-2">
+                    <i class="fas fa-calendar-month fa-2x"></i>
+                </div>
+                <h5 class="card-title">This Month</h5>
+                <h3 class="text-info">@Model.ThisMonthAmount.ToString("N0") UZS</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="text-warning mb-2">
+                    <i class="fas fa-chart-line fa-2x"></i>
+                </div>
+                <h5 class="card-title">Average Amount</h5>
+                <h3 class="text-warning">@Model.AverageAmount.ToString("N0") UZS</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Type Breakdown -->
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-chart-pie me-2 text-primary"></i>Donation Types
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <h3 class="text-primary">@Model.OneTimeDonations</h3>
+                            <p class="text-muted mb-0">One Time</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-info">@Model.MonthlyDonations</h3>
+                        <p class="text-muted mb-0">Monthly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-percentage me-2 text-success"></i>Success Rate
+                </h6>
+            </div>
+            <div class="card-body">
+                @{
+                    var successRate = Model.TotalDonations > 0 ? (Model.CompletedDonations * 100.0 / Model.TotalDonations) : 0;
+                }
+                <div class="text-center">
+                    <h2 class="text-success">@successRate.ToString("F1")%</h2>
+                    <p class="text-muted">@Model.CompletedDonations of @Model.TotalDonations donations completed</p>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width: @successRate%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Monthly Trends -->
+@if (Model.MonthlyStats.Any())
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+            <h6 class="card-title mb-0">
+                <i class="fas fa-chart-area me-2 text-primary"></i>Monthly Trends (Last 12 Months)
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Count</th>
+                            <th>Amount</th>
+                            <th>Average</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var stat in Model.MonthlyStats)
+                        {
+                            <tr>
+                                <td>@stat.Month</td>
+                                <td>@stat.Count</td>
+                                <td>@stat.Amount.ToString("N0") UZS</td>
+                                <td>@((stat.Count > 0 ? stat.Amount / stat.Count : 0).ToString("N0")) UZS</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

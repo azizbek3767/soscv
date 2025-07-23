@@ -1,0 +1,319 @@
+﻿<!-- Soskd.Admin/Views/MediaAboutUs/Edit.cshtml -->
+@model Soskd.Admin.ViewModels.MediaAboutUsViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "Edit Media Item";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-edit me-2 text-warning"></i>Edit Media Item
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@Model.Id">
+                    <i class="fas fa-eye me-2"></i>View Details
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="PhotoUrl" type="hidden" />
+    <input asp-for="CreatedAt" type="hidden" />
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Uzbek Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Uzbek Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleUz" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleUz) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleUz" class="form-control" placeholder="Enter title in Uzbek" />
+                        <span asp-validation-for="TitleUz" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionUz" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionUz) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionUz" class="form-control rich-text-editor" rows="4"></textarea>
+                        <span asp-validation-for="DescriptionUz" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Russian Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Russian Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleRu" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleRu) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleRu" class="form-control" placeholder="Enter title in Russian" />
+                        <span asp-validation-for="TitleRu" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionRu" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionRu) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionRu" class="form-control rich-text-editor" rows="4"></textarea>
+                        <span asp-validation-for="DescriptionRu" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- English Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>English Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleEn" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleEn) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleEn" class="form-control" placeholder="Enter title in English" />
+                        <span asp-validation-for="TitleEn" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionEn" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionEn) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionEn" class="form-control rich-text-editor" rows="4"></textarea>
+                        <span asp-validation-for="DescriptionEn" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media and Link Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-link me-2 text-primary"></i>Media and Link Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Photo" class="form-label">
+                            <i class="fas fa-image me-1"></i>@Html.DisplayNameFor(m => m.Photo)
+                        </label>
+                        @if (!string.IsNullOrEmpty(Model.PhotoUrl) && apiFileService != null)
+                        {
+                            <div class="mb-2">
+                                <img src="@apiFileService.GetApiFileUrl(@Model.PhotoUrl)" alt="Current Photo" class="img-thumbnail d-block" style="max-width: 200px; max-height: 150px;">
+                                <div class="form-text text-muted">Current photo</div>
+                            </div>
+                        }
+                        <input asp-for="Photo" class="form-control" type="file" accept="image/*" />
+                        <span asp-validation-for="Photo" class="text-danger small"></span>
+                        <div class="form-text">Leave empty to keep current photo. Recommended size: 400x266px</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SourceLink" class="form-label">
+                            <i class="fas fa-external-link-alt me-1"></i>@Html.DisplayNameFor(m => m.SourceLink) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="SourceLink" class="form-control" type="url" placeholder="https://example.com/article" />
+                        <span asp-validation-for="SourceLink" class="text-danger small"></span>
+                        <div class="form-text">Link to the original source article or webpage</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Publication Settings -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cog me-2 text-primary"></i>Publication Settings
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label">
+                            <i class="fas fa-eye me-1"></i>@Html.DisplayNameFor(m => m.Status) <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="1">Published</option>
+                            <option value="2">Unpublished</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                        <div class="form-text">Published media will be visible on website.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PublishDate" class="form-label">
+                            <i class="fas fa-calendar me-1"></i>@Html.DisplayNameFor(m => m.PublishDate) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="PublishDate" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="PublishDate" class="text-danger small"></span>
+                        <div class="form-text">When this media item should be published.</div>
+                    </div>
+
+                    @if (Model.CreatedAt.HasValue)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-info-circle me-1"></i>Created At
+                            </label>
+                            <div class="form-control-plaintext small text-muted">
+                                @Model.CreatedAt.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fas fa-save me-2"></i>Update Media Item
+                        </button>
+                        <a class="btn btn-outline-secondary" asp-action="Index">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                            <i class="fas fa-trash me-2"></i>Delete Media Item
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-light border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2 text-info"></i>Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small mb-0">
+                        <li><i class="fas fa-hashtag text-muted me-1"></i> <strong>ID:</strong> #@Model.Id</li>
+                        @if (Model.CreatedAt.HasValue)
+                        {
+                            <li><i class="fas fa-calendar text-muted me-1"></i> <strong>Created:</strong> @Model.CreatedAt.Value.ToString("MMM dd, yyyy")</li>
+                        }
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            <li><i class="fas fa-clock text-muted me-1"></i> <strong>Updated:</strong> @Model.UpdatedAt.Value.ToString("MMM dd, yyyy")</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.11/dist/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            console.log('Edit Media About Us page loaded');
+
+            // Format datetime for input
+            const publishDateInput = $('#PublishDate');
+            if (publishDateInput.length && publishDateInput.val()) {
+                const date = new Date(publishDateInput.val());
+                const offset = date.getTimezoneOffset() * 60000;
+                const localISOTime = (new Date(date - offset)).toISOString().slice(0, -1);
+                publishDateInput.val(localISOTime.substring(0, 16));
+            }
+
+            // Image preview functionality
+            $('#Photo').on('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // Remove existing preview
+                        $('.new-photo-preview').remove();
+
+                        // Add new preview
+                        const preview = $('<div class="new-photo-preview mt-2">' +
+                            '<img src="' + e.target.result + '" alt="New Photo Preview" class="img-thumbnail d-block" style="max-width: 200px; max-height: 150px;">' +
+                            '<div class="form-text text-success">New photo preview</div>' +
+                            '</div>');
+                        $('#Photo').closest('.mb-3').append(preview);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // URL validation for source link
+            $('#SourceLink').on('blur', function() {
+                const url = $(this).val();
+                if (url && !url.match(/^https?:\/\/.+/)) {
+                    $(this).addClass('is-invalid');
+                    $(this).next('.text-danger').text('Please enter a valid URL starting with http:// or https://');
+                } else {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                    $(this).next('.text-danger').text('');
+                }
+            });
+
+            // Form validation enhancement
+            $('form').on('submit', function(e) {
+                const requiredFields = $(this).find('[required]');
+                let isValid = true;
+
+                requiredFields.each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                    }
+                });
+
+                // Validate URL format
+                const sourceLink = $('#SourceLink').val();
+                if (sourceLink && !sourceLink.match(/^https?:\/\/.+/)) {
+                    $('#SourceLink').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    $('<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">' +
+                      '<i class="fas fa-exclamation-circle me-2"></i>Please fill in all required fields and ensure the source link is valid.' +
+                      '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                      '</div>').prependTo('.container-fluid');
+
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 500);
+                }
+            });
+
+            console.log('Edit page: All event handlers attached successfully');
+        });
+    </script>
+}

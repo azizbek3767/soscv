@@ -1,0 +1,333 @@
+﻿@model Soskd.Admin.ViewModels.VacancyViewModel
+@{
+    ViewData["Title"] = "Vacancy Details";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-eye me-2 text-info"></i>Vacancy Details
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="fas fa-edit me-2"></i>Edit
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Content with Language Tabs -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">@Model.TitleEn</h5>
+                    <span class="badge @Model.StatusDisplay.ToLower() fs-6">
+                        @if (Model.StatusDisplay == "Active")
+                        {
+                            <i class="fas fa-check me-1"></i>
+                        }
+                        else if (Model.StatusDisplay == "Expired")
+                        {
+                            <i class="fas fa-times me-1"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-clock me-1"></i>
+                        }
+                        @Model.StatusDisplay
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Content in Language Tabs -->
+                <ul class="nav nav-tabs" id="contentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="uzbek-tab" data-bs-toggle="tab" data-bs-target="#uzbek" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Uzbek
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="russian-tab" data-bs-toggle="tab" data-bs-target="#russian" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Russian
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="english-tab" data-bs-toggle="tab" data-bs-target="#english" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>English
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3" id="contentTabsContent">
+                    <!-- Uzbek Content -->
+                    <div class="tab-pane fade show active" id="uzbek" role="tabpanel">
+                        <div class="mb-3">
+                            <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                            <p class="mb-2">@Model.TitleUz</p>
+                        </div>
+
+                        <strong><i class="fas fa-align-left me-1"></i>Job Description:</strong>
+                        <div class="mt-2 border rounded p-3 bg-light">
+                            @Html.Raw(Model.DescriptionUz)
+                        </div>
+                    </div>
+
+                    <!-- Russian Content -->
+                    <div class="tab-pane fade" id="russian" role="tabpanel">
+                        <div class="mb-3">
+                            <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                            <p class="mb-2">@Model.TitleRu</p>
+                        </div>
+
+                        <strong><i class="fas fa-align-left me-1"></i>Job Description:</strong>
+                        <div class="mt-2 border rounded p-3 bg-light">
+                            @Html.Raw(Model.DescriptionRu)
+                        </div>
+                    </div>
+
+                    <!-- English Content -->
+                    <div class="tab-pane fade" id="english" role="tabpanel">
+                        <div class="mb-3">
+                            <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                            <p class="mb-2">@Model.TitleEn</p>
+                        </div>
+
+                        <strong><i class="fas fa-align-left me-1"></i>Job Description:</strong>
+                        <div class="mt-2 border rounded p-3 bg-light">
+                            @Html.Raw(Model.DescriptionEn)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-clock me-2 text-primary"></i>Application Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-5">Published:</dt>
+                            <dd class="col-sm-7">
+                                @if (Model.PublishedDate.HasValue)
+                                {
+                                    <span class="text-success">
+                                        <i class="fas fa-check me-1"></i>
+                                        @Model.PublishedDate.Value.ToString("MMM dd, yyyy HH:mm")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-warning">
+                                        <i class="fas fa-clock me-1"></i>Draft (not published)
+                                    </span>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-5">Deadline:</dt>
+                            <dd class="col-sm-7">
+                                @if (Model.Deadline.HasValue)
+                                {
+                                    @if (Model.IsExpired)
+                                    {
+                                        <span class="text-danger">
+                                            <i class="fas fa-times me-1"></i>
+                                            @Model.Deadline.Value.ToString("MMM dd, yyyy HH:mm")
+                                            <br><small>Expired</small>
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-info">
+                                            <i class="fas fa-clock me-1"></i>
+                                            @Model.Deadline.Value.ToString("MMM dd, yyyy HH:mm")
+                                            <br><small>@((Model.Deadline.Value - DateTime.Now).Days) days left</small>
+                                        </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No deadline set</span>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">ID:</dt>
+                    <dd class="col-sm-7">#@Model.Id</dd>
+
+                    <dt class="col-sm-5">Status:</dt>
+                    <dd class="col-sm-7">
+                        <span class="badge @Model.StatusDisplay.ToLower()">
+                            @if (Model.StatusDisplay == "Active")
+                            {
+                                <i class="fas fa-check me-1"></i>
+                            }
+                            else if (Model.StatusDisplay == "Expired")
+                            {
+                                <i class="fas fa-times me-1"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-clock me-1"></i>
+                            }
+                            @Model.StatusDisplay
+                        </span>
+                    </dd>
+
+                    @if (Model.PublishedDate.HasValue)
+                    {
+                        <dt class="col-sm-5">Published:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.PublishedDate.Value.ToString("MMM dd, yyyy")<br>@Model.PublishedDate.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+
+                    @if (Model.Deadline.HasValue)
+                    {
+                        <dt class="col-sm-5">Deadline:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.Deadline.Value.ToString("MMM dd, yyyy")<br>@Model.Deadline.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+
+                    @if (Model.CreatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.CreatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.CreatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+
+                    @if (Model.UpdatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Updated:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.UpdatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.UpdatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+
+        <!-- Quick Status Check -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-check-circle me-2 text-success"></i>Status Check
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        @if (Model.IsPublished)
+                        {
+                            <i class="fas fa-check text-success me-2"></i>
+                            <span class="text-success">Published and visible</span>
+                        }
+                        else
+                        {
+                            <i class="fas fa-clock text-warning me-2"></i>
+                            <span class="text-warning">Draft - not published yet</span>
+                        }
+                    </li>
+                    <li class="mb-2">
+                        @if (Model.Deadline.HasValue)
+                        {
+                            @if (Model.IsExpired)
+                            {
+                                <i class="fas fa-times text-danger me-2"></i>
+                                <span class="text-danger">Application deadline passed</span>
+                            }
+                            else
+                            {
+                                <i class="fas fa-clock text-info me-2"></i>
+                                <span class="text-info">@((Model.Deadline.Value - DateTime.Now).Days) days until deadline</span>
+                            }
+                        }
+                        else
+                        {
+                            <i class="fas fa-infinity text-muted me-2"></i>
+                            <span class="text-muted">No application deadline</span>
+                        }
+                    </li>
+                    <li>
+                        @if (Model.IsActive)
+                        {
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span class="text-success">Accepting applications</span>
+                        }
+                        else
+                        {
+                            <i class="fas fa-pause-circle text-secondary me-2"></i>
+                            <span class="text-secondary">Not accepting applications</span>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                        <i class="fas fa-edit me-2"></i>Edit Vacancy
+                    </a>
+                    <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                        <i class="fas fa-trash me-2"></i>Delete Vacancy
+                    </a>
+                    <a class="btn btn-outline-secondary" asp-action="Index">
+                        <i class="fas fa-list me-2"></i>All Vacancies
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge.active {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge.draft {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .badge.expired {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>

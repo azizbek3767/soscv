@@ -1,0 +1,235 @@
+﻿<!-- Soskd.Admin/Views/VacancyApplications/Details.cshtml -->
+@model Soskd.Admin.ViewModels.VacancyApplicationViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "Application Details";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-user me-2 text-info"></i>Application Details
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                    <i class="fas fa-trash me-2"></i>Delete Application
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Applicant Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user-circle me-2 text-primary"></i>@Model.FullName
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">First Name:</dt>
+                            <dd class="col-sm-8">@Model.FirstName</dd>
+
+                            <dt class="col-sm-4">Last Name:</dt>
+                            <dd class="col-sm-8">@Model.LastName</dd>
+
+                            <dt class="col-sm-4">Email:</dt>
+                            <dd class="col-sm-8">
+                                <a href="mailto:@Model.Email">@Model.Email</a>
+                            </dd>
+
+                            <dt class="col-sm-4">Phone:</dt>
+                            <dd class="col-sm-8">
+                                @if (!string.IsNullOrEmpty(Model.Phone))
+                                {
+                                    <a href="tel:@Model.Phone">@Model.Phone</a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not provided</span>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Applied Date:</dt>
+                            <dd class="col-sm-8">
+                                @Model.CreatedAt.ToString("MMMM dd, yyyy")
+                                <br>
+                                <small class="text-muted">@Model.CreatedAt.ToString("HH:mm")</small>
+                            </dd>
+
+                            <dt class="col-sm-4">Application ID:</dt>
+                            <dd class="col-sm-8">#@Model.Id</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vacancy Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-briefcase me-2 text-success"></i>Applied Position
+                </h6>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Vacancy ID:</dt>
+                    <dd class="col-sm-9">
+                        <a asp-controller="Vacancies" asp-action="Details" asp-route-id="@Model.VacancyId">
+                            #@Model.VacancyId
+                        </a>
+                    </dd>
+
+                    <dt class="col-sm-3">Position Title:</dt>
+                    <dd class="col-sm-9">
+                        <h6 class="mb-0">@Model.VacancyTitle</h6>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Cover Letter -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-file-alt me-2 text-warning"></i>Cover Letter
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="border rounded p-3 bg-light">
+                    @Html.Raw(Model.CoverLetter.Replace("\n", "<br>"))
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Resume Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-file-pdf me-2 text-danger"></i>Resume
+                </h6>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(Model.ResumeUrl))
+                {
+                    <div class="text-center mb-3">
+                        <i class="fas fa-file-pdf fa-3x text-danger mb-2"></i>
+                        <div class="small text-muted">@Model.ResumeFileName</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-primary"
+                           asp-action="DownloadResume" asp-route-id="@Model.Id"
+                           target="_blank">
+                            <i class="fas fa-download me-2"></i>Download Resume
+                        </a>
+                        <a class="btn btn-outline-primary"
+                           href="@(apiFileService?.GetApiFileUrl(Model.ResumeUrl))"
+                           target="_blank">
+                            <i class="fas fa-external-link-alt me-2"></i>View in Browser
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-muted">
+                        <i class="fas fa-file-excel fa-3x mb-2"></i>
+                        <div>No resume file uploaded</div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-bolt me-2 text-warning"></i>Quick Actions
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-success" href="mailto:@Model.Email?subject=Re: Application for @Model.VacancyTitle">
+                        <i class="fas fa-envelope me-2"></i>Send Email
+                    </a>
+
+                    @if (!string.IsNullOrEmpty(Model.Phone))
+                    {
+                        <a class="btn btn-info" href="tel:@Model.Phone">
+                            <i class="fas fa-phone me-2"></i>Call Applicant
+                        </a>
+                    }
+
+                    <a class="btn btn-outline-primary"
+                       asp-controller="Vacancies" asp-action="Details" asp-route-id="@Model.VacancyId">
+                        <i class="fas fa-briefcase me-2"></i>View Vacancy
+                    </a>
+
+                    <a class="btn btn-outline-secondary"
+                       asp-action="Index" asp-route-vacancyId="@Model.VacancyId">
+                        <i class="fas fa-users me-2"></i>Other Applications
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Statistics -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-chart-line me-2 text-info"></i>Application Info
+                </h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0 small">
+                    <dt class="col-6">Application ID:</dt>
+                    <dd class="col-6">#@Model.Id</dd>
+
+                    <dt class="col-6">Submitted:</dt>
+                    <dd class="col-6">@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
+
+                    <dt class="col-6">Time:</dt>
+                    <dd class="col-6">@Model.CreatedAt.ToString("HH:mm")</dd>
+
+                    <dt class="col-6">Vacancy ID:</dt>
+                    <dd class="col-6">#@Model.VacancyId</dd>
+
+                    <dt class="col-6">Cover Letter:</dt>
+                    <dd class="col-6">@Model.CoverLetter.Length characters</dd>
+
+                    <dt class="col-6">Resume File:</dt>
+                    <dd class="col-6">
+                        @if (!string.IsNullOrEmpty(Model.ResumeFileName))
+                        {
+                            <span class="text-success">
+                                <i class="fas fa-check me-1"></i>Attached
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">
+                                <i class="fas fa-times me-1"></i>Missing
+                            </span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

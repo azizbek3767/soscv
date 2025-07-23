@@ -1,0 +1,330 @@
+﻿@model Soskd.Admin.ViewModels.VacancyViewModel
+@{
+    ViewData["Title"] = "Edit Vacancy";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-edit me-2 text-warning"></i>Edit Vacancy
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@Model.Id">
+                    <i class="fas fa-eye me-2"></i>View Details
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form asp-action="Edit" method="post" class="needs-validation" novalidate>
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="CreatedAt" type="hidden" />
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Uzbek Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Uzbek Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleUz" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleUz) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleUz" class="form-control" placeholder="Enter job title in Uzbek" />
+                        <span asp-validation-for="TitleUz" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionUz" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionUz) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionUz" class="form-control rich-text-editor" rows="6"></textarea>
+                        <span asp-validation-for="DescriptionUz" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Russian Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Russian Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleRu" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleRu) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleRu" class="form-control" placeholder="Enter job title in Russian" />
+                        <span asp-validation-for="TitleRu" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionRu" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionRu) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionRu" class="form-control rich-text-editor" rows="6"></textarea>
+                        <span asp-validation-for="DescriptionRu" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- English Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>English Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleEn" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleEn) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleEn" class="form-control" placeholder="Enter job title in English" />
+                        <span asp-validation-for="TitleEn" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionEn" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionEn) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionEn" class="form-control rich-text-editor" rows="6"></textarea>
+                        <span asp-validation-for="DescriptionEn" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Publication Settings -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cog me-2 text-primary"></i>Publication Settings
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label">
+                            <i class="fas fa-eye me-1"></i>@Html.DisplayNameFor(m => m.Status) <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="1">Draft</option>
+                            <option value="2">Published</option>
+                            <option value="3">Closed</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                        <div class="form-text">Control the vacancy visibility and application acceptance.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PublishedDate" class="form-label">
+                            <i class="fas fa-calendar me-1"></i>@Html.DisplayNameFor(m => m.PublishedDate)
+                        </label>
+                        <input asp-for="PublishedDate" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="PublishedDate" class="text-danger small"></span>
+                        <div class="form-text">When this vacancy should be published. Leave empty to save as draft.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Deadline" class="form-label">
+                            <i class="fas fa-clock me-1"></i>@Html.DisplayNameFor(m => m.Deadline)
+                        </label>
+                        <input asp-for="Deadline" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="Deadline" class="text-danger small"></span>
+                        <div class="form-text">Application deadline. Leave empty if no deadline.</div>
+                    </div>
+
+                    @if (Model.CreatedAt.HasValue)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-info-circle me-1"></i>Created At
+                            </label>
+                            <div class="form-control-plaintext small text-muted">
+                                @Model.CreatedAt.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Status Info -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2 text-info"></i>Current Status
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <span class="badge @Model.StatusDisplay.ToLower() fs-6 px-3 py-2">
+                            @if (Model.StatusDisplay == "Active")
+                            {
+                                <i class="fas fa-check me-1"></i>
+                            }
+                            else if (Model.StatusDisplay == "Expired")
+                            {
+                                <i class="fas fa-times me-1"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-clock me-1"></i>
+                            }
+                            @Model.StatusDisplay
+                        </span>
+                    </div>
+                    <div class="mt-3 small text-muted">
+                        @if (Model.IsPublished)
+                        {
+                            <div><i class="fas fa-check text-success me-1"></i> Published</div>
+                        }
+                        else
+                        {
+                            <div><i class="fas fa-clock text-warning me-1"></i> Draft (not published)</div>
+                        }
+
+                        @if (Model.IsExpired)
+                        {
+                            <div><i class="fas fa-times text-danger me-1"></i> Deadline passed</div>
+                        }
+                        else if (Model.Deadline.HasValue)
+                        {
+                            <div><i class="fas fa-clock text-info me-1"></i> @((Model.Deadline.Value - DateTime.Now).Days) days left</div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fas fa-save me-2"></i>Update Vacancy
+                        </button>
+                        <a class="btn btn-outline-secondary" asp-action="Index">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                            <i class="fas fa-trash me-2"></i>Delete Vacancy
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-light border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2 text-info"></i>Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small mb-0">
+                        <li><i class="fas fa-hashtag text-muted me-1"></i> <strong>ID:</strong> #@Model.Id</li>
+                        @if (Model.CreatedAt.HasValue)
+                        {
+                            <li><i class="fas fa-calendar text-muted me-1"></i> <strong>Created:</strong> @Model.CreatedAt.Value.ToString("MMM dd, yyyy")</li>
+                        }
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            <li><i class="fas fa-clock text-muted me-1"></i> <strong>Updated:</strong> @Model.UpdatedAt.Value.ToString("MMM dd, yyyy")</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.11/dist/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            console.log('Edit Vacancy page loaded');
+
+            // Format datetime for input
+            const publishedDateInput = $('#PublishedDate');
+            const deadlineInput = $('#Deadline');
+
+            if (publishedDateInput.length && publishedDateInput.val()) {
+                const date = new Date(publishedDateInput.val());
+                const offset = date.getTimezoneOffset() * 60000;
+                const localISOTime = (new Date(date - offset)).toISOString().slice(0, -1);
+                publishedDateInput.val(localISOTime.substring(0, 16));
+            }
+
+            if (deadlineInput.length && deadlineInput.val()) {
+                const date = new Date(deadlineInput.val());
+                const offset = date.getTimezoneOffset() * 60000;
+                const localISOTime = (new Date(date - offset)).toISOString().slice(0, -1);
+                deadlineInput.val(localISOTime.substring(0, 16));
+            }
+
+            // Form validation enhancement
+            $('form').on('submit', function(e) {
+                // Force TinyMCE to save content
+                if (typeof tinymce !== 'undefined') {
+                    tinymce.triggerSave();
+                }
+
+                const requiredFields = $(this).find('[required]');
+                let isValid = true;
+
+                requiredFields.each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    $('<div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">' +
+                      '<i class="fas fa-exclamation-circle me-2"></i>Please fill in all required fields.' +
+                      '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                      '</div>').prependTo('.container-fluid');
+
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 500);
+                }
+            });
+
+            console.log('Edit page: All event handlers attached successfully');
+        });
+    </script>
+}
+
+<style>
+    .badge.active {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge.draft {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .badge.expired {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>

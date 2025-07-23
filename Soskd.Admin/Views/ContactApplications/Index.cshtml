@@ -1,0 +1,310 @@
+﻿<!-- Soskd.Admin/Views/ContactApplications/Index.cshtml -->
+@model Soskd.Admin.ViewModels.ContactApplicationListViewModel
+@{
+    ViewData["Title"] = "Contact Applications";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-envelope me-2 text-info"></i>Contact Applications
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-success" asp-action="Export">
+                    <i class="fas fa-download me-2"></i>Export CSV
+                </a>
+                <button type="button" class="btn btn-danger" id="bulkDeleteBtn" disabled>
+                    <i class="fas fa-trash me-2"></i>Delete Selected
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Search and Filter Bar -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label for="search" class="form-label">Search Applications</label>
+                <input type="text" class="form-control" id="search" name="search"
+                       value="@Model.SearchQuery" placeholder="Search by name, email, city, or message...">
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search me-2"></i>Search
+                </button>
+                @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                {
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Clear
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Applications List -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom-0 py-3">
+        <div class="row align-items-center">
+            <div class="col">
+                <h6 class="card-title mb-0 text-muted">
+                    <i class="fas fa-list me-2"></i>
+                    All Applications (@Model.TotalCount)
+                    @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                    {
+                        <span class="badge bg-info">Filtered</span>
+                    }
+                </h6>
+            </div>
+            <div class="col-auto">
+                <small class="text-muted">
+                    Showing @Model.StartIndex to @Model.EndIndex of @Model.TotalCount entries
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.Applications.Any())
+        {
+            <form id="bulkDeleteForm" method="post" asp-action="BulkDelete">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" id="selectAll" class="form-check-input">
+                                </th>
+                                <th>Applicant</th>
+                                <th>Contact Info</th>
+                                <th>City</th>
+                                <th>Message Preview</th>
+                                <th>Submitted</th>
+                                <th style="width: 120px;" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var application in Model.Applications)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="selectedIds" value="@application.Id"
+                                               class="form-check-input application-checkbox">
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <h6 class="mb-1">@application.FullName</h6>
+                                            <small class="text-muted">ID: #@application.Id</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <div class="mb-1">
+                                                <i class="fas fa-envelope fa-sm text-muted me-1"></i>
+                                                <a href="mailto:@application.Email">@application.Email</a>
+                                            </div>
+                                            @if (application.HasPhone)
+                                            {
+                                                <div>
+                                                    <i class="fas fa-phone fa-sm text-muted me-1"></i>
+                                                    <a href="tel:@application.Phone">@application.Phone</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">@application.City</span>
+                                    </td>
+                                    <td>
+                                        <div class="message-preview" style="max-width: 300px;">
+                                            @application.MessagePreview
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-muted small">
+                                            @application.CreatedAt.ToString("MMM dd, yyyy")
+                                            <br>
+                                            @application.CreatedAt.ToString("HH:mm")
+                                            <div class="text-success small">@application.TimeAgo</div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-outline-primary btn-sm"
+                                               asp-action="Details" asp-route-id="@application.Id" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a class="btn btn-outline-danger btn-sm btn-delete"
+                                               asp-action="Delete" asp-route-id="@application.Id" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+            <!-- Pagination -->
+            @if (Model.TotalPages > 1)
+            {
+                <div class="card-footer bg-white border-top-0">
+                    <nav aria-label="Contact applications pagination">
+                        <ul class="pagination pagination-sm justify-content-center mb-0">
+                            @if (Model.HasPreviousPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-page="@(Model.PageNumber - 1)"
+                                       asp-route-search="@Model.SearchQuery">Previous</a>
+                                </li>
+                            }
+
+                            @for (int i = Math.Max(1, Model.PageNumber - 2); i <= Math.Min(Model.TotalPages, Model.PageNumber + 2); i++)
+                            {
+                                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-page="@i"
+                                       asp-route-search="@Model.SearchQuery">@i</a>
+                                </li>
+                            }
+
+                            @if (Model.HasNextPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-page="@(Model.PageNumber + 1)"
+                                       asp-route-search="@Model.SearchQuery">Next</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-envelope-open fa-3x text-muted"></i>
+                </div>
+                <h5 class="text-muted mb-3">
+                    @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                    {
+                        <text>No Applications Found</text>
+                    }
+                    else
+                    {
+                        <text>No Contact Applications Yet</text>
+                    }
+                </h5>
+                <p class="text-muted mb-4">
+                    @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                    {
+                        <text>No applications match your search criteria. Try adjusting your search terms.</text>
+                    }
+                    else
+                    {
+                        <text>Contact applications will appear here once people start submitting the contact form on your website.</text>
+                    }
+                </p>
+                @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                {
+                    <a class="btn btn-primary" href="@Url.Action("Index")">
+                        <i class="fas fa-list me-2"></i>View All Applications
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Select All functionality
+        $('#selectAll').on('change', function() {
+            $('.application-checkbox').prop('checked', this.checked);
+            updateBulkDeleteButton();
+        });
+
+        // Individual checkbox change
+        $('.application-checkbox').on('change', function() {
+            updateBulkDeleteButton();
+
+            // Update "Select All" checkbox
+            var totalCheckboxes = $('.application-checkbox').length;
+            var checkedCheckboxes = $('.application-checkbox:checked').length;
+            $('#selectAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+        });
+
+        // Update bulk delete button state
+        function updateBulkDeleteButton() {
+            var checkedCount = $('.application-checkbox:checked').length;
+            $('#bulkDeleteBtn').prop('disabled', checkedCount === 0);
+
+            if (checkedCount > 0) {
+                $('#bulkDeleteBtn').text(`Delete Selected (${checkedCount})`);
+            } else {
+                $('#bulkDeleteBtn').html('<i class="fas fa-trash me-2"></i>Delete Selected');
+            }
+        }
+
+        // Bulk delete confirmation
+        $('#bulkDeleteBtn').on('click', function() {
+            var checkedCount = $('.application-checkbox:checked').length;
+            if (checkedCount > 0) {
+                if (confirm(`Are you sure you want to delete ${checkedCount} contact application(s)? This action cannot be undone.`)) {
+                    $('#bulkDeleteForm').submit();
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    .message-preview {
+        font-size: 0.9em;
+        line-height: 1.4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        color: #5a5c69;
+        background-color: #f8f9fc;
+    }
+
+    .btn-group .btn {
+        border-radius: 0.25rem;
+        margin-right: 0.1rem;
+    }
+</style>

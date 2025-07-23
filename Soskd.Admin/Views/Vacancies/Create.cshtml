@@ -1,0 +1,282 @@
+﻿@model Soskd.Admin.ViewModels.VacancyViewModel
+@{
+    ViewData["Title"] = "Create Vacancy";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-plus-circle me-2 text-primary"></i>Create Vacancy
+            </h1>
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Display any errors -->
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <h6><i class="fas fa-exclamation-triangle me-2"></i>ModelState Errors:</h6>
+        <ul class="mb-0">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<form asp-action="Create" method="post" id="vacancyForm">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Uzbek Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Uzbek Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleUz" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleUz) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleUz" class="form-control" placeholder="Enter job title in Uzbek" required />
+                        <span asp-validation-for="TitleUz" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionUz" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionUz) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionUz" class="form-control rich-text-editor" rows="6" required></textarea>
+                        <span asp-validation-for="DescriptionUz" class="text-danger small"></span>
+                        <div class="form-text">Include job requirements, responsibilities, and qualifications.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Russian Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>Russian Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleRu" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleRu) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleRu" class="form-control" placeholder="Enter job title in Russian" required />
+                        <span asp-validation-for="TitleRu" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionRu" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionRu) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionRu" class="form-control rich-text-editor" rows="6" required></textarea>
+                        <span asp-validation-for="DescriptionRu" class="text-danger small"></span>
+                        <div class="form-text">Include job requirements, responsibilities, and qualifications.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- English Content Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-flag me-2 text-primary"></i>English Content Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="TitleEn" class="form-label">
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(m => m.TitleEn) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="TitleEn" class="form-control" placeholder="Enter job title in English" required />
+                        <span asp-validation-for="TitleEn" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DescriptionEn" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>@Html.DisplayNameFor(m => m.DescriptionEn) <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="DescriptionEn" class="form-control rich-text-editor" rows="6" required></textarea>
+                        <span asp-validation-for="DescriptionEn" class="text-danger small"></span>
+                        <div class="form-text">Include job requirements, responsibilities, and qualifications.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Publication Settings -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-cog me-2 text-primary"></i>Publication Settings
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label">
+                            <i class="fas fa-eye me-1"></i>@Html.DisplayNameFor(m => m.Status) <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Status" class="form-select" required>
+                            <option value="1">Draft</option>
+                            <option value="2" selected>Published</option>
+                            <option value="3">Closed</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                        <div class="form-text">Control the vacancy visibility and application acceptance.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PublishedDate" class="form-label">
+                            <i class="fas fa-calendar me-1"></i>@Html.DisplayNameFor(m => m.PublishedDate)
+                        </label>
+                        <input asp-for="PublishedDate" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="PublishedDate" class="text-danger small"></span>
+                        <div class="form-text">When this vacancy should be published. Leave empty to save as draft.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Deadline" class="form-label">
+                            <i class="fas fa-clock me-1"></i>@Html.DisplayNameFor(m => m.Deadline)
+                        </label>
+                        <input asp-for="Deadline" class="form-control" type="datetime-local" />
+                        <span asp-validation-for="Deadline" class="text-danger small"></span>
+                        <div class="form-text">Application deadline. Leave empty if no deadline.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <i class="fas fa-save me-2"></i>Create Vacancy
+                        </button>
+                        <a class="btn btn-outline-secondary" asp-action="Index">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-light border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2 text-info"></i>Tips
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small mb-0">
+                        <li><i class="fas fa-lightbulb text-warning me-1"></i> <strong>Title:</strong> Keep it clear and descriptive</li>
+                        <li><i class="fas fa-lightbulb text-warning me-1"></i> <strong>Description:</strong> Include key requirements and benefits</li>
+                        <li><i class="fas fa-lightbulb text-warning me-1"></i> <strong>Published Date:</strong> Leave empty to save as draft</li>
+                        <li><i class="fas fa-lightbulb text-warning me-1"></i> <strong>Deadline:</strong> Set a realistic application deadline</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <!-- Load validation scripts AFTER jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.11/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            console.log('Create Vacancy page loaded');
+
+            // Set default datetime values
+            const publishedDateInput = $('#PublishedDate');
+            const deadlineInput = $('#Deadline');
+
+            if (publishedDateInput.length && !publishedDateInput.val()) {
+                const now = new Date();
+                const offset = now.getTimezoneOffset() * 60000;
+                const localISOTime = (new Date(now - offset)).toISOString().slice(0, -1);
+                publishedDateInput.val(localISOTime.substring(0, 16));
+            }
+
+            if (deadlineInput.length && !deadlineInput.val()) {
+                const futureDate = new Date();
+                futureDate.setDate(futureDate.getDate() + 30);
+                const offset = futureDate.getTimezoneOffset() * 60000;
+                const localISOTime = (new Date(futureDate - offset)).toISOString().slice(0, -1);
+                deadlineInput.val(localISOTime.substring(0, 16));
+            }
+
+            // Enhanced form submission with detailed validation
+            $('#vacancyForm').on('submit', function(e) {
+                console.log('Form submission started...');
+
+                // Force TinyMCE to save content
+                if (typeof tinymce !== 'undefined') {
+                    console.log('Saving TinyMCE content...');
+                    tinymce.triggerSave();
+
+                    // Check TinyMCE content
+                    $('.rich-text-editor').each(function() {
+                        const content = $(this).val();
+                        const fieldName = $(this).attr('name');
+                        console.log(`TinyMCE ${fieldName}: ${content ? content.length + ' characters' : 'EMPTY'}`);
+                    });
+                }
+
+                // Validate required fields
+                let isValid = true;
+                let missingFields = [];
+
+                $(this).find('[required]').each(function() {
+                    const value = $(this).val();
+                    const fieldName = $(this).attr('name') || $(this).prev('label').text() || 'Unknown';
+
+                    if (!value || value.trim() === '') {
+                        missingFields.push(fieldName);
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                        console.log(`VALIDATION ERROR: ${fieldName} is empty`);
+                    } else {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                        console.log(`VALIDATION OK: ${fieldName} has value`);
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields:\n- ' + missingFields.join('\n- '));
+                    return false;
+                }
+
+                // Show loading state
+                const submitBtn = $('#submitBtn');
+                const originalText = submitBtn.html();
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Submitting...').prop('disabled', true);
+
+                console.log('Form validation passed - submitting to server');
+
+                // Re-enable button after timeout in case of issues
+                setTimeout(function() {
+                    submitBtn.html(originalText).prop('disabled', false);
+                }, 60000);
+
+                return true;
+            });
+
+            console.log('All event handlers attached successfully');
+        });
+    </script>
+}

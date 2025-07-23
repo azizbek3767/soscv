@@ -1,0 +1,487 @@
+﻿<!-- Soskd.Admin/Views/Documents/Index.cshtml -->
+@model Soskd.Admin.ViewModels.DocumentListViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "Documents Management";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-file-pdf me-2 text-primary"></i>Documents Management
+            </h1>
+            <a class="btn btn-primary btn-lg" asp-action="Create">
+                <i class="fas fa-plus me-2"></i>Add Document
+            </a>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom-0 py-3">
+        <div class="row align-items-center">
+            <div class="col">
+                <h6 class="card-title mb-0 text-muted">
+                    <i class="fas fa-list me-2"></i>All Documents (@Model.TotalCount)
+                </h6>
+            </div>
+            <div class="col-auto">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#languageModal">
+                        <i class="fas fa-language me-1"></i>Language View
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.Documents.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"><i class="fas fa-file-pdf text-muted"></i></th>
+                            <th>Title (English)</th>
+                            <th style="width: 120px;">Category</th>
+                            <th style="width: 150px;">File Sizes</th>
+                            <th style="width: 120px;">Status</th>
+                            <th style="width: 150px;">Published Date</th>
+                            <th style="width: 200px;" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Documents)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <div class="dropdown">
+                                        <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown">
+                                            <i class="fas fa-file-pdf fa-lg text-danger"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" href="@apiFileService.GetApiFileUrl(@item.FileUrlUz)" target="_blank">
+                                                    <i class="fas fa-eye me-1"></i>View Uzbek PDF
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="@apiFileService.GetApiFileUrl(@item.FileUrl)" target="_blank">
+                                                    <i class="fas fa-eye me-1"></i>View Russian PDF
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="@apiFileService.GetApiFileUrl(@item.FileUrlEn)" target="_blank">
+                                                    <i class="fas fa-eye me-1"></i>View English PDF
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <a href="@apiFileService.GetApiFileUrl(@item.FileUrlEn)" target="_blank" class="text-decoration-none">
+                                                @item.TitleEn
+                                            </a>
+                                        </h6>
+                                        <small class="text-muted">
+                                            <strong>UZ:</strong> @(item.TitleUz.Length > 40 ? item.TitleUz.Substring(0, 40) + "..." : item.TitleUz)
+                                        </small>
+                                        <br>
+                                        <small class="text-muted">
+                                            <strong>RU:</strong> @(item.TitleRu.Length > 40 ? item.TitleRu.Substring(0, 40) + "..." : item.TitleRu)
+                                        </small>
+                                        @if (!string.IsNullOrEmpty(item.DescriptionEn))
+                                        {
+                                            <div class="small text-muted mt-1">
+                                                @(item.DescriptionEn.Length > 60 ? item.DescriptionEn.Substring(0, 60) + "..." : item.DescriptionEn)
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">@item.CategoryDisplayEn</span>
+                                </td>
+                                <td>
+                                    <div class="small">
+                                        <div><strong>UZ:</strong> <span class="badge bg-light text-dark">@item.FileSizeFormattedUz</span></div>
+                                        <div><strong>RU:</strong> <span class="badge bg-light text-dark">@item.FileSizeFormatted</span></div>
+                                        <div><strong>EN:</strong> <span class="badge bg-light text-dark">@item.FileSizeFormattedEn</span></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.Status == Soskd.Domain.Enums.DocumentStatus.Published)
+                                    {
+                                        <span class="badge status-published">
+                                            <i class="fas fa-check me-1"></i>Published
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge status-unpublished">
+                                            <i class="fas fa-clock me-1"></i>Unpublished
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="text-muted small">
+                                        @item.PublishDate.ToString("MMM dd, yyyy")
+                                        <br>
+                                        @item.PublishDate.ToString("HH:mm")
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" href="@apiFileService.GetApiFileUrl(@item.FileUrlUz)" target="_blank">
+                                                        <i class="fas fa-file-pdf text-danger me-1"></i>Uzbek PDF
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="@apiFileService.GetApiFileUrl(@item.FileUrl)" target="_blank">
+                                                        <i class="fas fa-file-pdf text-danger me-1"></i>Russian PDF
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="@apiFileService.GetApiFileUrl(@item.FileUrlEn)" target="_blank">
+                                                        <i class="fas fa-file-pdf text-danger me-1"></i>English PDF
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <a class="btn btn-outline-primary btn-sm" asp-action="Details" asp-route-id="@item.Id" title="View Details">
+                                            <i class="fas fa-info"></i>
+                                        </a>
+                                        <a class="btn btn-outline-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm btn-delete" asp-action="Delete" asp-route-id="@item.Id" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <div class="card-footer bg-white border-top-0">
+                    <nav aria-label="Documents pagination">
+                        <ul class="pagination pagination-sm justify-content-center mb-0">
+                            @if (Model.PageNumber > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber - 1)">Previous</a>
+                                </li>
+                            }
+
+                            @for (int i = Math.Max(1, Model.PageNumber - 2); i <= Math.Min(Model.TotalPages, Model.PageNumber + 2); i++)
+                            {
+                                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                    <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+
+                            @if (Model.PageNumber < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber + 1)">Next</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                    <div class="text-center text-muted small mt-2">
+                        Showing @((Model.PageNumber - 1) * Model.PageSize + 1) to @(Math.Min(Model.PageNumber * Model.PageSize, Model.TotalCount)) of @Model.TotalCount entries
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-file-pdf fa-3x text-muted"></i>
+                </div>
+                <h5 class="text-muted mb-3">No Documents Found</h5>
+                <p class="text-muted mb-4">You haven't uploaded any documents yet. Start by adding your first multilingual document.</p>
+                <a class="btn btn-primary" asp-action="Create">
+                    <i class="fas fa-plus me-2"></i>Add First Document
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Language View Modal -->
+<div class="modal fade" id="languageModal" tabindex="-1" aria-labelledby="languageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="languageModalLabel">
+                    <i class="fas fa-language me-2"></i>Documents by Language
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Language Tabs -->
+                <ul class="nav nav-tabs" id="languageTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="uzbek-tab" data-bs-toggle="tab" data-bs-target="#uzbek-view" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Uzbek (@Model.Documents.Count)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="russian-tab" data-bs-toggle="tab" data-bs-target="#russian-view" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Russian (@Model.Documents.Count)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="english-tab" data-bs-toggle="tab" data-bs-target="#english-view" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>English (@Model.Documents.Count)
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3" id="languageTabsContent">
+                    <!-- Uzbek View -->
+                    <div class="tab-pane fade show active" id="uzbek-view" role="tabpanel">
+                        <div class="row">
+                            @foreach (var item in Model.Documents)
+                            {
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start mb-2">
+                                                <i class="fas fa-file-pdf fa-2x text-danger me-2"></i>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="card-title mb-1">@item.TitleUz</h6>
+                                                    @if (!string.IsNullOrEmpty(item.DescriptionUz))
+                                                    {
+                                                        <p class="card-text small text-muted">
+                                                            @(item.DescriptionUz.Length > 60 ? item.DescriptionUz.Substring(0, 60) + "..." : item.DescriptionUz)
+                                                        </p>
+                                                    }
+                                                    <div class="small">
+                                                        <span class="badge bg-light text-dark">@item.FileSizeFormattedUz</span>
+                                                        <span class="badge bg-info ms-1">@item.CategoryDisplayEn</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group btn-group-sm w-100">
+                                                <a href="@apiFileService.GetApiFileUrl(@item.FileUrlUz)" target="_blank" class="btn btn-primary">
+                                                    <i class="fas fa-eye me-1"></i>View
+                                                </a>
+                                                <a href="@apiFileService.GetApiFileUrl(@item.FileUrlUz)" download class="btn btn-success">
+                                                    <i class="fas fa-download me-1"></i>Download
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Russian View -->
+                    <div class="tab-pane fade" id="russian-view" role="tabpanel">
+                        <div class="row">
+                            @foreach (var item in Model.Documents)
+                            {
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start mb-2">
+                                                <i class="fas fa-file-pdf fa-2x text-danger me-2"></i>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="card-title mb-1">@item.TitleRu</h6>
+                                                    @if (!string.IsNullOrEmpty(item.DescriptionRu))
+                                                    {
+                                                        <p class="card-text small text-muted">
+                                                            @(item.DescriptionRu.Length > 60 ? item.DescriptionRu.Substring(0, 60) + "..." : item.DescriptionRu)
+                                                        </p>
+                                                    }
+                                                    <div class="small">
+                                                        <span class="badge bg-light text-dark">@item.FileSizeFormatted</span>
+                                                        <span class="badge bg-info ms-1">@item.CategoryDisplayEn</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group btn-group-sm w-100">
+                                                <a href="@apiFileService.GetApiFileUrl(@item.FileUrl)" target="_blank" class="btn btn-primary">
+                                                    <i class="fas fa-eye me-1"></i>View
+                                                </a>
+                                                <a href="@apiFileService.GetApiFileUrl(@item.FileUrl)" download class="btn btn-success">
+                                                    <i class="fas fa-download me-1"></i>Download
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- English View -->
+                    <div class="tab-pane fade" id="english-view" role="tabpanel">
+                        <div class="row">
+                            @foreach (var item in Model.Documents)
+                            {
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start mb-2">
+                                                <i class="fas fa-file-pdf fa-2x text-danger me-2"></i>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="card-title mb-1">@item.TitleEn</h6>
+                                                    @if (!string.IsNullOrEmpty(item.DescriptionEn))
+                                                    {
+                                                        <p class="card-text small text-muted">
+                                                            @(item.DescriptionEn.Length > 60 ? item.DescriptionEn.Substring(0, 60) + "..." : item.DescriptionEn)
+                                                        </p>
+                                                    }
+                                                    <div class="small">
+                                                        <span class="badge bg-light text-dark">@item.FileSizeFormattedEn</span>
+                                                        <span class="badge bg-info ms-1">@item.CategoryDisplayEn</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group btn-group-sm w-100">
+                                                <a href="@apiFileService.GetApiFileUrl(@item.FileUrlEn)" target="_blank" class="btn btn-primary">
+                                                    <i class="fas fa-eye me-1"></i>View
+                                                </a>
+                                                <a href="@apiFileService.GetApiFileUrl(@item.FileUrlEn)" download class="btn btn-success">
+                                                    <i class="fas fa-download me-1"></i>Download
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a class="btn btn-primary" asp-action="Create">
+                    <i class="fas fa-plus me-2"></i>Add New Document
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Confirmation for delete buttons
+            $('.btn-delete').on('click', function(e) {
+                e.preventDefault();
+                const href = $(this).attr('href');
+                if (confirm('Are you sure you want to delete this document and all its language versions? This action cannot be undone.')) {
+                    window.location.href = href;
+                }
+            });
+
+            // Auto-refresh functionality (optional)
+            let autoRefresh = false;
+            $('#autoRefreshToggle').on('change', function() {
+                autoRefresh = $(this).is(':checked');
+                if (autoRefresh) {
+                    setInterval(function() {
+                        if (autoRefresh) {
+                            location.reload();
+                        }
+                    }, 30000); // Refresh every 30 seconds
+                }
+            });
+
+            // Enhanced tooltips for file size badges
+            $('[data-bs-toggle="tooltip"]').tooltip();
+
+            // Search functionality (if you want to add it later)
+            $('#documentSearch').on('keyup', function() {
+                const value = $(this).val().toLowerCase();
+                $('#documentsTable tbody tr').filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+
+            // Language modal auto-focus on active tab
+            $('#languageModal').on('shown.bs.modal', function() {
+                $('.nav-tabs .nav-link.active').focus();
+            });
+
+            // Bulk operations (if needed)
+            $('#selectAll').on('change', function() {
+                $('.document-checkbox').prop('checked', $(this).is(':checked'));
+                updateBulkActions();
+            });
+
+            $('.document-checkbox').on('change', function() {
+                updateBulkActions();
+            });
+
+            function updateBulkActions() {
+                const checkedCount = $('.document-checkbox:checked').length;
+                $('#bulkActions').toggle(checkedCount > 0);
+                $('#selectedCount').text(checkedCount);
+            }
+
+            // Export functionality
+            $('#exportBtn').on('click', function() {
+                // Implement export logic here
+                alert('Export functionality will be implemented');
+            });
+
+            // Quick actions
+            $('.quick-view').on('click', function(e) {
+                e.preventDefault();
+                const documentId = $(this).data('id');
+                // Implement quick view modal
+                console.log('Quick view for document:', documentId);
+            });
+
+            // Status toggle
+            $('.status-toggle').on('click', function(e) {
+                e.preventDefault();
+                const documentId = $(this).data('id');
+                const currentStatus = $(this).data('status');
+
+                if (confirm('Are you sure you want to change the status of this document?')) {
+                    // Implement AJAX status update
+                    console.log('Toggle status for document:', documentId, 'Current:', currentStatus);
+                }
+            });
+        });
+    </script>
+}

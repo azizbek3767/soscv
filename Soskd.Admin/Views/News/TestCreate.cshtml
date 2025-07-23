@@ -1,0 +1,180 @@
+﻿<!-- EMERGENCY TEST: Soskd.Admin/Views/News/TestCreate.cshtml -->
+<!-- Create this as a separate view for testing basic functionality -->
+@model Soskd.Admin.ViewModels.NewsViewModel
+@{
+    ViewData["Title"] = "TEST Create News";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>🔬 EMERGENCY TEST - Minimal News Creation</h1>
+            <div class="alert alert-info">
+                This is a minimal test form with no TinyMCE, no file uploads, just basic fields to test if the core functionality works.
+            </div>
+        </div>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <h5>Errors:</h5>
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <form asp-action="TestCreate" method="post" id="testForm">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="TitleUz" class="form-label">Title (Uzbek) *</label>
+                    <input asp-for="TitleUz" class="form-control" placeholder="Test title UZ" required />
+                    <span asp-validation-for="TitleUz" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="TitleRu" class="form-label">Title (Russian) *</label>
+                    <input asp-for="TitleRu" class="form-control" placeholder="Test title RU" required />
+                    <span asp-validation-for="TitleRu" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="TitleEn" class="form-label">Title (English) *</label>
+                    <input asp-for="TitleEn" class="form-control" placeholder="Test title EN" required />
+                    <span asp-validation-for="TitleEn" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="DescriptionUz" class="form-label">Description (Uzbek) *</label>
+                    <textarea asp-for="DescriptionUz" class="form-control" rows="3" placeholder="Test description UZ" required></textarea>
+                    <span asp-validation-for="DescriptionUz" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DescriptionRu" class="form-label">Description (Russian) *</label>
+                    <textarea asp-for="DescriptionRu" class="form-control" rows="3" placeholder="Test description RU" required></textarea>
+                    <span asp-validation-for="DescriptionRu" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DescriptionEn" class="form-label">Description (English) *</label>
+                    <textarea asp-for="DescriptionEn" class="form-control" rows="3" placeholder="Test description EN" required></textarea>
+                    <span asp-validation-for="DescriptionEn" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Status" class="form-label">Status *</label>
+                    <select asp-for="Status" class="form-control" required>
+                        <option value="1">Published</option>
+                        <option value="2">Unpublished</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="PublishedDate" class="form-label">Published Date *</label>
+                    <input asp-for="PublishedDate" class="form-control" type="datetime-local" required />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Fake file upload for testing -->
+                <div class="mb-3">
+                    <label class="form-label">Small Photo URL (Test) *</label>
+                    <input type="text" name="FakePhotoUrl" class="form-control" value="/uploads/news/test.jpg" readonly />
+                    <div class="form-text">Using fake URL for testing</div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Category" class="form-label">Category</label>
+                    <select asp-for="Category" class="form-control">
+                        <option value="">Select Category</option>
+                        <option value="1">Education</option>
+                        <option value="2">Events</option>
+                        <option value="3">Memorandums</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary me-2">🧪 TEST CREATE</button>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <button type="button" class="btn btn-info" onclick="debugFormData()">🔍 Debug Data</button>
+        </div>
+    </form>
+
+    <div id="debugOutput" class="mt-4" style="display: none;">
+        <h5>Debug Output:</h5>
+        <pre id="debugData" class="bg-light p-3"></pre>
+    </div>
+</div>
+
+<script>
+    // Set default date
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.querySelector('#PublishedDate');
+        if (dateInput && !dateInput.value) {
+            const now = new Date();
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, -1);
+            dateInput.value = localISOTime.substring(0, 16);
+        }
+    });
+
+    function debugFormData() {
+        const formData = new FormData(document.getElementById('testForm'));
+        let debugText = 'Form Data:\n';
+        for (let [key, value] of formData.entries()) {
+            debugText += `${key}: "${value}"\n`;
+        }
+
+        document.getElementById('debugData').textContent = debugText;
+        document.getElementById('debugOutput').style.display = 'block';
+
+        console.log('Form Debug Data:', debugText);
+    }
+
+    // Simple form validation
+    document.getElementById('testForm').addEventListener('submit', function(e) {
+        console.log('Test form submitted');
+
+        let isValid = true;
+        const required = this.querySelectorAll('[required]');
+
+        required.forEach(function(field) {
+            if (!field.value || field.value.trim() === '') {
+                field.style.borderColor = 'red';
+                isValid = false;
+                console.log('Empty required field:', field.name);
+            } else {
+                field.style.borderColor = '';
+                console.log('Field OK:', field.name, '=', field.value.substring(0, 20));
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill all required fields');
+            return false;
+        }
+
+        // Show loading
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.innerHTML = '⏳ Testing...';
+        btn.disabled = true;
+
+        console.log('Test form validation passed, submitting...');
+        return true;
+    });
+</script>

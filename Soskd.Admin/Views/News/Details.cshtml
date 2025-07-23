@@ -1,0 +1,337 @@
+﻿<!-- Soskd.Admin/Views/News/Details.cshtml - Updated with new fields -->
+@model Soskd.Admin.ViewModels.NewsViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "News Details";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-eye me-2 text-info"></i>News Details
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="fas fa-edit me-2"></i>Edit
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Content with Language Tabs -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">@Model.TitleEn</h5>
+                    @if (Model.Status == Soskd.Domain.Enums.NewsStatus.Published)
+                    {
+                        <span class="badge status-published">
+                            <i class="fas fa-check me-1"></i>Published
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge status-unpublished">
+                            <i class="fas fa-clock me-1"></i>Unpublished
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Photos -->
+                @if (!string.IsNullOrEmpty(Model.LargePhotoUrl) && apiFileService != null)
+                {
+                    <div class="mb-4 text-center">
+                        <img src="@apiFileService.GetApiFileUrl(@Model.LargePhotoUrl)" alt="News Photo" class="img-fluid rounded shadow-sm" style="max-height: 400px;">
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(Model.SmallPhotoUrl))
+                {
+                    <div class="mb-4 text-center">
+                        <img src="@Model.SmallPhotoUrl" alt="News Photo" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                    </div>
+                }
+
+                <!-- Content in Language Tabs -->
+                <ul class="nav nav-tabs" id="contentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="uzbek-tab" data-bs-toggle="tab" data-bs-target="#uzbek" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Uzbek
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="russian-tab" data-bs-toggle="tab" data-bs-target="#russian" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>Russian
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="english-tab" data-bs-toggle="tab" data-bs-target="#english" type="button" role="tab">
+                            <i class="fas fa-flag me-1"></i>English
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3" id="contentTabsContent">
+                    <!-- Uzbek Content -->
+                    <div class="tab-pane fade show active" id="uzbek" role="tabpanel">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                                <p class="mb-2">@Model.TitleUz</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-link me-1"></i>Slug:</strong>
+                                <p class="mb-2 text-muted font-monospace">@(Model.SlugUz ?? "Not set")</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-tags me-1"></i>Meta Title:</strong>
+                                <p class="mb-2 small">@(Model.MetaTitleUz ?? "Not set")</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-file-text me-1"></i>Meta Description:</strong>
+                                <p class="mb-2 small">@(Model.MetaDescriptionUz ?? "Not set")</p>
+                            </div>
+                        </div>
+
+                        <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                        <div class="mt-2 border rounded p-3 bg-light">
+                            @Html.Raw(Model.DescriptionUz)
+                        </div>
+                    </div>
+
+                    <!-- Russian Content -->
+                    <div class="tab-pane fade" id="russian" role="tabpanel">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                                <p class="mb-2">@Model.TitleRu</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-link me-1"></i>Slug:</strong>
+                                <p class="mb-2 text-muted font-monospace">@(Model.SlugRu ?? "Not set")</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-tags me-1"></i>Meta Title:</strong>
+                                <p class="mb-2 small">@(Model.MetaTitleRu ?? "Not set")</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-file-text me-1"></i>Meta Description:</strong>
+                                <p class="mb-2 small">@(Model.MetaDescriptionRu ?? "Not set")</p>
+                            </div>
+                        </div>
+
+                        <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                        <div class="mt-2 border rounded p-3 bg-light">
+                            @Html.Raw(Model.DescriptionRu)
+                        </div>
+                    </div>
+
+                    <!-- English Content -->
+                    <div class="tab-pane fade" id="english" role="tabpanel">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-heading me-1"></i>Title:</strong>
+                                <p class="mb-2">@Model.TitleEn</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-link me-1"></i>Slug:</strong>
+                                <p class="mb-2 text-muted font-monospace">@(Model.SlugEn ?? "Not set")</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-tags me-1"></i>Meta Title:</strong>
+                                <p class="mb-2 small">@(Model.MetaTitleEn ?? "Not set")</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong><i class="fas fa-file-text me-1"></i>Meta Description:</strong>
+                                <p class="mb-2 small">@(Model.MetaDescriptionEn ?? "Not set")</p>
+                            </div>
+                        </div>
+
+                        <strong><i class="fas fa-align-left me-1"></i>Description:</strong>
+                        <div class="mt-2 border rounded p-3 bg-light">
+                            @Html.Raw(Model.DescriptionEn)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEO Preview Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-search me-2 text-success"></i>SEO Preview
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-pills mb-3" id="seoTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="seo-uzbek-tab" data-bs-toggle="pill" data-bs-target="#seo-uzbek" type="button">Uzbek</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="seo-russian-tab" data-bs-toggle="pill" data-bs-target="#seo-russian" type="button">Russian</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="seo-english-tab" data-bs-toggle="pill" data-bs-target="#seo-english" type="button">English</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <!-- Uzbek SEO -->
+                    <div class="tab-pane fade show active" id="seo-uzbek">
+                        <div class="border rounded p-3 bg-light">
+                            <div class="text-primary mb-1" style="font-size: 18px;">@(Model.MetaTitleUz ?? Model.TitleUz)</div>
+                            <div class="text-success small mb-1">www.soskd.uz/news/@(Model.SlugUz ?? Model.Id.ToString())</div>
+                            <div class="text-muted small">@(Model.MetaDescriptionUz ?? Model.TitleUz)</div>
+                        </div>
+                    </div>
+
+                    <!-- Russian SEO -->
+                    <div class="tab-pane fade" id="seo-russian">
+                        <div class="border rounded p-3 bg-light">
+                            <div class="text-primary mb-1" style="font-size: 18px;">@(Model.MetaTitleRu ?? Model.TitleRu)</div>
+                            <div class="text-success small mb-1">www.soskd.uz/news/@(Model.SlugRu ?? Model.Id.ToString())</div>
+                            <div class="text-muted small">@(Model.MetaDescriptionRu ?? Model.TitleRu)</div>
+                        </div>
+                    </div>
+
+                    <!-- English SEO -->
+                    <div class="tab-pane fade" id="seo-english">
+                        <div class="border rounded p-3 bg-light">
+                            <div class="text-primary mb-1" style="font-size: 18px;">@(Model.MetaTitleEn ?? Model.TitleEn)</div>
+                            <div class="text-success small mb-1">www.soskd.uz/news/@(Model.SlugEn ?? Model.Id.ToString())</div>
+                            <div class="text-muted small">@(Model.MetaDescriptionEn ?? Model.TitleEn)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">ID:</dt>
+                    <dd class="col-sm-7">#@Model.Id</dd>
+
+                    <dt class="col-sm-5">Category:</dt>
+                    <dd class="col-sm-7">
+                        @if (Model.Category.HasValue)
+                        {
+                            <span class="badge bg-info">@Model.CategoryDisplayEn</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No category</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5">Status:</dt>
+                    <dd class="col-sm-7">
+                        @if (Model.Status == Soskd.Domain.Enums.NewsStatus.Published)
+                        {
+                            <span class="badge status-published">
+                                <i class="fas fa-check me-1"></i>Published
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge status-unpublished">
+                                <i class="fas fa-clock me-1"></i>Unpublished
+                            </span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5">Published:</dt>
+                    <dd class="col-sm-7">
+                        <small>@Model.PublishedDate.ToString("MMM dd, yyyy")<br>@Model.PublishedDate.ToString("HH:mm")</small>
+                    </dd>
+
+                    @if (Model.CreatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.CreatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.CreatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+
+                    @if (Model.UpdatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Updated:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.UpdatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.UpdatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+
+        <!-- Photos Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-images me-2 text-primary"></i>Photos
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @if (!string.IsNullOrEmpty(Model.SmallPhotoUrl) && apiFileService != null)
+                    {
+                        <div class="col-6">
+                            <strong>Small Photo:</strong>
+                            <img src="@apiFileService.GetApiFileUrl(@Model.SmallPhotoUrl)" alt="Small Photo" class="img-thumbnail d-block mt-1" style="max-width: 100px;">
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.LargePhotoUrl) && apiFileService != null)
+                    {
+                        <div class="col-6">
+                            <strong>Large Photo:</strong>
+                            <img src="@apiFileService.GetApiFileUrl(@Model.LargePhotoUrl)" alt="Large Photo" class="img-thumbnail d-block mt-1" style="max-width: 100px;">
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                        <i class="fas fa-edit me-2"></i>Edit News
+                    </a>
+                    <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                        <i class="fas fa-trash me-2"></i>Delete News
+                    </a>
+                    <a class="btn btn-outline-secondary" asp-action="Index">
+                        <i class="fas fa-list me-2"></i>All News
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

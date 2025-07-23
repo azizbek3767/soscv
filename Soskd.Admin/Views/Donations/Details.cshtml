@@ -1,0 +1,219 @@
+﻿@model Soskd.Admin.ViewModels.DonationViewModel
+@{
+    ViewData["Title"] = "Donation Details";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-eye me-2 text-info"></i>Donation Details
+            </h1>
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Main Details -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Donation Information</h5>
+                    <span class="badge @Model.StatusBadgeClass fs-6">
+                        @Model.StatusDisplay
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Order ID:</dt>
+                            <dd class="col-sm-8">
+                                <span class="font-monospace">@Model.OrderId</span>
+                            </dd>
+
+                            <dt class="col-sm-4">Amount:</dt>
+                            <dd class="col-sm-8">
+                                <strong class="text-success">@Model.Amount.ToString("N0") UZS</strong>
+                            </dd>
+
+                            <dt class="col-sm-4">Type:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge @(Model.Type == Soskd.Domain.Enums.DonationType.Monthly ? "bg-info" : "bg-primary")">
+                                    @Model.TypeDisplay
+                                </span>
+                                @if (Model.IsRecurring)
+                                {
+                                    <br>
+
+                                    <small class="text-info"><i class="fas fa-sync me-1"></i>Recurring Payment</small>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-4">Payment Method:</dt>
+                            <dd class="col-sm-8">@(Model.PaymentMethod ?? "N/A")</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">UPay Transaction:</dt>
+                            <dd class="col-sm-8">
+                                @if (!string.IsNullOrEmpty(Model.UpayTransactionId))
+                                {
+                                    <span class="font-monospace">@Model.UpayTransactionId</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not available</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-4">Created:</dt>
+                            <dd class="col-sm-8">
+                                @Model.CreatedAt.ToString("MMMM dd, yyyy HH:mm")
+                            </dd>
+
+                            @if (Model.PaymentCompletedAt.HasValue)
+                            {
+                                <dt class="col-sm-4">Completed:</dt>
+                                <dd class="col-sm-8">
+                                    @Model.PaymentCompletedAt.Value.ToString("MMMM dd, yyyy HH:mm")
+                                </dd>
+                            }
+
+                            @if (Model.NextPaymentDate.HasValue)
+                            {
+                                <dt class="col-sm-4">Next Payment:</dt>
+                                <dd class="col-sm-8">
+                                    @Model.NextPaymentDate.Value.ToString("MMMM dd, yyyy")
+                                </dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.FailureReason))
+                {
+                    <div class="alert alert-danger mt-3">
+                        <strong>Failure Reason:</strong> @Model.FailureReason
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Donor Information -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-user me-2 text-primary"></i>Donor Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Name:</dt>
+                    <dd class="col-sm-9">@Model.DonorName</dd>
+
+                    <dt class="col-sm-3">Email:</dt>
+                    <dd class="col-sm-9">
+                        <a href="mailto:@Model.DonorEmail">@Model.DonorEmail</a>
+                    </dd>
+
+                    @if (!string.IsNullOrEmpty(Model.DonorPhone))
+                    {
+                        <dt class="col-sm-3">Phone:</dt>
+                        <dd class="col-sm-9">
+                            <a href="tel:@Model.DonorPhone">@Model.DonorPhone</a>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Status Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Status Information
+                </h6>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-@(Model.Status == Soskd.Domain.Enums.DonationStatus.Completed ? "check-circle text-success" :
+                                     Model.Status == Soskd.Domain.Enums.DonationStatus.Pending ? "clock text-warning" :
+                                     Model.Status == Soskd.Domain.Enums.DonationStatus.Failed ? "times-circle text-danger" :
+                                     "question-circle text-secondary") fa-3x"></i>
+                </div>
+                <h5 class="@(Model.Status == Soskd.Domain.Enums.DonationStatus.Completed ? "text-success" :
+                            Model.Status == Soskd.Domain.Enums.DonationStatus.Pending ? "text-warning" :
+                            Model.Status == Soskd.Domain.Enums.DonationStatus.Failed ? "text-danger" :
+                            "text-secondary")">
+                    @Model.StatusDisplay
+                </h5>
+                @if (Model.Status == Soskd.Domain.Enums.DonationStatus.Completed)
+                {
+                    <p class="text-muted mb-0">Payment completed successfully</p>
+                }
+                else if (Model.Status == Soskd.Domain.Enums.DonationStatus.Pending)
+                {
+                    <p class="text-muted mb-0">Waiting for payment completion</p>
+                }
+                else if (Model.Status == Soskd.Domain.Enums.DonationStatus.Failed)
+                {
+                    <p class="text-muted mb-0">Payment processing failed</p>
+                }
+            </div>
+        </div>
+
+        <!-- Recurring Information -->
+        @if (Model.Type == Soskd.Domain.Enums.DonationType.Monthly)
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-sync me-2 text-info"></i>Recurring Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6">Recurring:</dt>
+                        <dd class="col-sm-6">
+                            @if (Model.IsRecurring)
+                            {
+                                <span class="badge bg-success">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No</span>
+                            }
+                        </dd>
+
+                        @if (Model.ParentDonationId.HasValue)
+                        {
+                            <dt class="col-sm-6">Parent Donation:</dt>
+                            <dd class="col-sm-6">
+                                <a href="@Url.Action("Details", new { id = Model.ParentDonationId })" class="btn btn-outline-primary btn-sm">
+                                    View #@Model.ParentDonationId
+                                </a>
+                            </dd>
+                        }
+
+                        @if (Model.NextPaymentDate.HasValue)
+                        {
+                            <dt class="col-sm-6">Next Payment:</dt>
+                            <dd class="col-sm-6">
+                                <small>@Model.NextPaymentDate.Value.ToString("MMM dd, yyyy")</small>
+                            </dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        }
+    </div>
+</div>

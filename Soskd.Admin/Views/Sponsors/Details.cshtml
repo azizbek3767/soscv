@@ -1,0 +1,241 @@
+﻿<!-- Soskd.Admin/Views/Sponsors/Details.cshtml -->
+@model Soskd.Admin.ViewModels.SponsorViewModel
+@using Soskd.Admin.Services
+@{
+    ViewData["Title"] = "Sponsor Details";
+    var apiFileService = ViewBag.ApiFileService as IApiFileService;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-eye me-2 text-info"></i>Sponsor Details
+            </h1>
+            <div class="btn-group">
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                    <i class="fas fa-edit me-2"></i>Edit
+                </a>
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Sponsor Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">@Model.TitleEn</h5>
+                    @if (Model.Status == Soskd.Domain.Enums.SponsorStatus.Published)
+                    {
+                        <span class="badge status-published">
+                            <i class="fas fa-check me-1"></i>Published
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge status-unpublished">
+                            <i class="fas fa-clock me-1"></i>Unpublished
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Logo Display -->
+                @if (!string.IsNullOrEmpty(Model.PhotoUrl) && apiFileService != null)
+                {
+                    <div class="mb-4 text-center">
+                        <img src="@apiFileService.GetApiFileUrl(@Model.PhotoUrl)" alt="@Model.TitleEn Logo" class="img-fluid rounded shadow-sm" style="max-height: 200px;">
+                    </div>
+                }
+
+                <!-- Multilingual Titles -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <strong><i class="fas fa-flag me-1"></i>Uzbek Title:</strong>
+                        <p class="mb-2">@Model.TitleUz</p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong><i class="fas fa-flag me-1"></i>Russian Title:</strong>
+                        <p class="mb-2">@Model.TitleRu</p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong><i class="fas fa-flag me-1"></i>English Title:</strong>
+                        <p class="mb-2">@Model.TitleEn</p>
+                    </div>
+                </div>
+
+                <!-- Website Link -->
+                <div class="mb-4">
+                    <strong><i class="fas fa-link me-1"></i>Website:</strong>
+                    <div class="mt-2">
+                        <a href="@Model.Link" target="_blank" class="btn btn-outline-primary">
+                            <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                        </a>
+                        <div class="form-text mt-1">@Model.Link</div>
+                    </div>
+                </div>
+
+                <!-- Display Order -->
+                <div class="mb-4">
+                    <strong><i class="fas fa-sort-numeric-up me-1"></i>Display Order:</strong>
+                    <span class="badge bg-secondary ms-2">@Model.DisplayOrder</span>
+                    <div class="form-text">Lower numbers appear first in the sponsors list.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Card -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-eye me-2 text-success"></i>Website Preview
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>Uzbek Version</h6>
+                        <div class="border rounded p-3 bg-light">
+                            @if (!string.IsNullOrEmpty(Model.PhotoUrl) && apiFileService != null)
+                            {
+                                <img src="@apiFileService.GetApiFileUrl(@Model.PhotoUrl)" alt="@Model.TitleUz" class="img-fluid mb-2" style="max-height: 60px;">
+                            }
+                            <div class="small"><strong>@Model.TitleUz</strong></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Russian Version</h6>
+                        <div class="border rounded p-3 bg-light">
+                            @if (!string.IsNullOrEmpty(Model.PhotoUrl) && apiFileService != null)
+                            {
+                                <img src="@apiFileService.GetApiFileUrl(@Model.PhotoUrl)" alt="@Model.TitleRu" class="img-fluid mb-2" style="max-height: 60px;">
+                            }
+                            <div class="small"><strong>@Model.TitleRu</strong></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>English Version</h6>
+                        <div class="border rounded p-3 bg-light">
+                            @if (!string.IsNullOrEmpty(Model.PhotoUrl) && apiFileService != null)
+                            {
+                                <img src="@apiFileService.GetApiFileUrl(@Model.PhotoUrl)" alt="@Model.TitleEn" class="img-fluid mb-2" style="max-height: 60px;">
+                            }
+                            <div class="small"><strong>@Model.TitleEn</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Information -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">ID:</dt>
+                    <dd class="col-sm-7">#@Model.Id</dd>
+
+                    <dt class="col-sm-5">Status:</dt>
+                    <dd class="col-sm-7">
+                        @if (Model.Status == Soskd.Domain.Enums.SponsorStatus.Published)
+                        {
+                            <span class="badge status-published">
+                                <i class="fas fa-check me-1"></i>Published
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge status-unpublished">
+                                <i class="fas fa-clock me-1"></i>Unpublished
+                            </span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5">Display Order:</dt>
+                    <dd class="col-sm-7">
+                        <span class="badge bg-secondary">@Model.DisplayOrder</span>
+                    </dd>
+
+                    @if (Model.CreatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.CreatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.CreatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+
+                    @if (Model.UpdatedAt.HasValue)
+                    {
+                        <dt class="col-sm-5">Updated:</dt>
+                        <dd class="col-sm-7">
+                            <small>@Model.UpdatedAt.Value.ToString("MMM dd, yyyy")<br>@Model.UpdatedAt.Value.ToString("HH:mm")</small>
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
+
+        <!-- Logo Information -->
+        @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+        {
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-image me-2 text-primary"></i>Logo
+                    </h6>
+                </div>
+                <div class="card-body text-center">
+                    @if (apiFileService != null)
+                    {
+                        <img src="@apiFileService.GetApiFileUrl(@Model.PhotoUrl)" alt="Logo" class="img-thumbnail mb-2" style="max-width: 150px;">
+                    }
+                    <div class="form-text">@Model.PhotoUrl</div>
+                </div>
+            </div>
+        }
+
+        <!-- Actions -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Id">
+                        <i class="fas fa-edit me-2"></i>Edit Sponsor
+                    </a>
+                    <a href="@Model.Link" target="_blank" class="btn btn-outline-primary">
+                        <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                    </a>
+                    <a class="btn btn-outline-danger btn-delete" asp-action="Delete" asp-route-id="@Model.Id">
+                        <i class="fas fa-trash me-2"></i>Delete Sponsor
+                    </a>
+                    <a class="btn btn-outline-secondary" asp-action="Index">
+                        <i class="fas fa-list me-2"></i>All Sponsors
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .status-published {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status-unpublished {
+        background-color: #6c757d;
+        color: white;
+    }
+</style>
